@@ -1,0 +1,21 @@
+{
+  "CONTRACT_ADDRESS": "0x2F23df982Fd9ad9485ca1aAD37eFfB5630899B7a",
+  "THIRM_ADDRESS": "0xb526fd41360c98929006f3bdcbd16d55de4b0069",
+  "THIRM_TOKEN_ADDRESS": "0x468CD3eC1d3cB98dC1df637429dDEe65c13df572",
+  "RPC_URL": "https://ropsten.infura.io/v3/370da5783b9b4bc086067dcfb45ba7a3",
+  "status": "WIP",
+  "network": "Ropsten",
+  "chainID": 3,
+  "tokens": [
+    {
+      "id": 0,
+      "coin": "NANO",
+      "name": "tNANO",
+      "fullname": "Thirm Nano",
+      "image": "https://thirm.com/icons/tNANO.png",
+      "address": "0x40972150eDcA90b32BA6b1A4CCda1f8aC275eD99",
+      "depositAddress": "nano_154c1u5w5t8jewwac1q44oja9ugr89hirsqcdudkytuan4418bf8pfrgjudz",
+      "depositFee": 0.15
+    }
+  ]
+}

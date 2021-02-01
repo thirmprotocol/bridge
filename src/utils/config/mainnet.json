@@ -1,0 +1,21 @@
+{
+		"CONTRACT_ADDRESS": "0x52540F6E845d12bAD6b328b2Fbb9D54b902ee8e6",
+		"THIRM_TOKEN_ADDRESS": "0xb526fd41360c98929006f3bdcbd16d55de4b0069",
+		"THIRM_LP_ADDRESS": "0xBb27A42A806aeb9898755b9BE189887Dc1220588",
+		"RPC_URL": "https://mainnet.infura.io/v3/370da5783b9b4bc086067dcfb45ba7a3",
+		"network": "MainNet",
+		"chainID": 1,
+		"tokens": [
+			{
+				"id": 0,
+				"coin": "NANO",
+				"coingeckoName": "nano",
+				"name": "tNANO",
+				"fullname": "Thirm Nano",
+				"image": "https://ipfs.io/ipfs/QmexKGqDqovzHZRZQkHvEv9GoWfi9yfDLah8HNWRrdAbHK/tNANO.png",
+				"address": "0x9DB44C215F14a874C0Ca45895f3A97f0839c29d9",
+				"depositAddress": "nano_154c1u5w5t8jewwac1q44oja9ugr89hirsqcdudkytuan4418bf8pfrgjudz"
+			}
+		
+		]
+	}
