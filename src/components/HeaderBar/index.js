@@ -63,8 +63,10 @@ function HeaderBar() {
         {active && <>
 
           <Button aria-describedby={id} color="primary" onClick={handleClick}>
-            <Avatar src={walletIcon} alt="wallet" />
-            <span>
+            <Avatar src={walletIcon} alt="wallet" variant="circular" style={{
+              width: 32, height: 32
+            }} />
+            <span className="account-address">
               {account && account.substr(0, 4)}...{account && account.substr(36)}
             </span>
           </Button>
@@ -120,7 +122,9 @@ function HeaderBar() {
         {
           !active && <>
             <Button variant="outlined" aria-describedby={id} color="primary" onClick={handleClick}>
-              <Avatar src={LoginKeyIcon} alt="wallet" />
+              <Avatar src={LoginKeyIcon} alt="wallet" variant="circular" style={{
+                width: 32, height: 32
+              }} />
               <span>
                 Connect
               </span>

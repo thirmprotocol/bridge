@@ -1,9 +1,7 @@
 import { Web3Provider } from '@ethersproject/providers';
 import { Web3ReactProvider } from '@web3-react/core';
 import { BrowserRouter as Router } from 'react-router-dom';
-import './App.css';
 import MainContent from './container/index';
-
 
 function getLibrary(provider) {
   const library = new Web3Provider(provider);

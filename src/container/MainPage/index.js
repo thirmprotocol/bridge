@@ -1,8 +1,8 @@
-import { Box, Card, CardContent, Container, Tab, Tabs } from '@material-ui/core';
+import { AppBar, Box, CardContent, Container, Tab, Tabs } from '@material-ui/core';
 import React from 'react';
 import Deposit from './../Deposit/index';
 import Withdraw from './../Withdraw/index';
-import { MainWrapper } from './style';
+import { MainCard, MainWrapper } from './style';
 
 
 function TabPanel(props) {
@@ -37,19 +37,20 @@ function MainPage() {
     <MainWrapper>
       <Container maxWidth="xs"
       >
-        <Card>
-          <Tabs
-            value={value}
-            indicatorColor="primary"
-            onChange={handleChange}
-            aria-label="THIRM function"
-            textColor="primary"
-            centered
-            variant="fullWidth"
-          >
-            <Tab label="Mint" />
-            <Tab label="Release" />
-          </Tabs>
+        <MainCard elevation={0}>
+          <AppBar position="static" elevation={0}>
+            <Tabs
+              value={value}
+              indicatorColor="primary"
+              onChange={handleChange}
+              aria-label="THIRM function"
+              centered
+              variant="fullWidth"
+            >
+              <Tab label="Mint" />
+              <Tab label="Release" />
+            </Tabs>
+          </AppBar>
           <CardContent>
             <TabPanel value={value} index={0}>
               <Deposit />
@@ -58,7 +59,7 @@ function MainPage() {
               <Withdraw />
             </TabPanel>
           </CardContent>
-        </Card>
+        </MainCard>
       </Container>
     </MainWrapper>
   );

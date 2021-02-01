@@ -1,4 +1,4 @@
-import { Avatar, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormHelperText, Grid, InputAdornment, List, ListItem, ListItemSecondaryAction, ListItemText, MenuItem, OutlinedInput, Select, Slide, Typography } from '@material-ui/core';
+import { Avatar, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, Grid, InputAdornment, InputLabel, List, ListItemSecondaryAction, ListItemText, MenuItem, OutlinedInput, Select, Slide, Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import { KeyboardArrowLeft } from '@material-ui/icons';
 import { useWeb3React } from '@web3-react/core';
@@ -7,6 +7,7 @@ import QRCode from 'react-qr-code';
 import oopsImage from '../../assets/images/oops.png';
 import { useMainContract } from '../../hooks';
 import config from './../../utils/config/index';
+import { StyledButton, StyledInputArea, StyledListItem } from './../globalStyle';
 import { DepositWrapper } from './style';
 
 
@@ -88,43 +89,50 @@ function Deposit() {
     <DepositWrapper>
       {
         currentStep === 0 && <>
-          <FormControl variant="outlined" fullWidth>
-            <OutlinedInput
-              value={values.amount}
-              onChange={handleChange('amount')}
-              endAdornment={<InputAdornment position="end">{tokensList[values.asset].coin}</InputAdornment>}
-              aria-describedby="outlined-amount-helper-text"
-              labelWidth={0}
-            />
-            <FormHelperText id="outlined-amount-helper-text">Amount</FormHelperText>
-          </FormControl>
+          <StyledInputArea>
+            <FormControl variant="outlined" fullWidth>
+              <InputLabel htmlFor="outlined-adornment-amount">Amount</InputLabel>
+              <OutlinedInput
+                value={values.amount}
+                onChange={handleChange('amount')}
+                endAdornment={<InputAdornment position="end">{tokensList[values.asset].coin}</InputAdornment>}
+                id="outlined-adornment-amount"
+                labelWidth={60}
+                type="number"
+              />
+            </FormControl>
+          </StyledInputArea>
 
-          <FormControl variant="outlined" fullWidth>
-            <OutlinedInput
-              value={values.address}
-              onChange={handleChange('address')}
-              aria-describedby="outlined-amount-helper-text"
-              labelWidth={0}
-            />
-            <FormHelperText id="outlined-amount-helper-text">{tokensList[values.asset].coin} Address</FormHelperText>
-          </FormControl>
+          <StyledInputArea>
+            <FormControl variant="outlined" fullWidth >
+              <InputLabel htmlFor="outlined-adornment-address">{tokensList[values.asset].coin} Address</InputLabel>
+              <OutlinedInput
+                value={values.address}
+                onChange={handleChange('address')}
+                id="outlined-adornment-address"
+                labelWidth={110}
+              />
+            </FormControl>
+          </StyledInputArea>
           <List>
-            <ListItem>
-              <ListItemText id="switch-list-label-bluetooth" primary="Asset" />
+            <StyledListItem>
+              <ListItemText primary="Asset" />
               <ListItemSecondaryAction>
-                <FormControl>
+                <FormControl variant="outlined">
                   <Select
                     value={values.asset}
                     onChange={handleChange('asset')}
                   >
                     {
-                      tokensList.map((tkn) =>
-                        <MenuItem value={tkn.id}>
+                      tokensList.map((tkn, index) =>
+                        <MenuItem value={index}>
                           <Grid container
                             direction="row"
                             justify="flex-start"
                             alignItems="center">
-                            <Avatar alt={tkn.name} src={tkn.image} />
+                            <Avatar alt={tkn.name} src={tkn.image} style={{
+                              width: 24, height: 24
+                            }} />
                             <Typography style={{ marginLeft: 16, marginRight: 16 }}>
                               {tkn.coin}
                             </Typography>
@@ -135,28 +143,27 @@ function Deposit() {
                   </Select>
                 </FormControl>
               </ListItemSecondaryAction>
-            </ListItem>
+            </StyledListItem>
 
-
-            <ListItem>
-              <ListItemText id="switch-list-label-bluetooth" primary="Destination" />
+            <StyledListItem>
+              <ListItemText primary="Destination" />
               <ListItemSecondaryAction>
                 <p>{account.slice(0, 15)}...</p>
               </ListItemSecondaryAction>
-            </ListItem>
+            </StyledListItem>
 
-            <ListItem>
-              <ListItemText id="switch-list-label-bluetooth" primary="You will Receive" />
+            <StyledListItem>
+              <ListItemText primary="You will Receive" />
               <ListItemSecondaryAction>
                 <p>{tokensList[values.asset].name}</p>
               </ListItemSecondaryAction>
-            </ListItem>
+            </StyledListItem>
 
           </List>
 
-          <Button fullWidth variant="contained" color="primary" onClick={onNext} disabled={!values.amount || !values.address}>
+          <StyledButton fullWidth variant="contained" color="primary" onClick={onNext} disabled={!values.amount || !values.address}>
             Next
-          </Button>
+          </StyledButton>
         </>
       }
 
@@ -186,44 +193,44 @@ function Deposit() {
 
               <List>
 
-                <ListItem>
-                  <ListItemText id="switch-list-label-bluetooth" primary="Asset" />
+                <StyledListItem>
+                  <ListItemText primary="Asset" />
                   <ListItemSecondaryAction>
                     {tokensList[values.asset].coin}
                   </ListItemSecondaryAction>
-                </ListItem>
+                </StyledListItem>
 
-                <ListItem>
-                  <ListItemText id="switch-list-label-bluetooth" primary="Amount" />
+                <StyledListItem>
+                  <ListItemText primary="Amount" />
                   <ListItemSecondaryAction>
                     {values.amount} {tokensList[values.asset].coin}
                   </ListItemSecondaryAction>
-                </ListItem>
+                </StyledListItem>
 
-                <ListItem>
-                  <ListItemText id="switch-list-label-bluetooth" primary={`${tokensList[values.asset].coin} Address`} />
+                <StyledListItem>
+                  <ListItemText primary={`${tokensList[values.asset].coin} Address`} />
                   <ListItemSecondaryAction>
                     <p>{values.address.slice(0, 15)}...</p>
                   </ListItemSecondaryAction>
-                </ListItem>
+                </StyledListItem>
 
-                <ListItem>
-                  <ListItemText id="switch-list-label-bluetooth" primary="Destination" />
+                <StyledListItem>
+                  <ListItemText primary="Destination" />
                   <ListItemSecondaryAction>
                     <p>{account.slice(0, 15)}...</p>
                   </ListItemSecondaryAction>
-                </ListItem>
+                </StyledListItem>
 
-                <ListItem>
-                  <ListItemText id="switch-list-label-bluetooth" primary="You will Receive" />
+                <StyledListItem>
+                  <ListItemText primary="You will Receive" />
                   <ListItemSecondaryAction>
                     <p>{tokensList[values.asset].name}</p>
                   </ListItemSecondaryAction>
-                </ListItem>
+                </StyledListItem>
               </List>
-              <Button fullWidth variant="contained" color="primary" onClick={openDepositDialog}>
+              <StyledButton fullWidth variant="contained" color="primary" onClick={openDepositDialog}>
                 Deposit
-            </Button>
+            </StyledButton>
 
               <Dialog
                 open={openDialog}

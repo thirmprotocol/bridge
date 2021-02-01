@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Avatar, CircularProgress, FormControl, FormHelperText, Grid, InputAdornment, List, ListItem, ListItemSecondaryAction, ListItemText, MenuItem, OutlinedInput, Select, Step, StepContent, StepLabel, Stepper, Typography } from '@material-ui/core';
+import { Avatar, CircularProgress, FormControl, Grid, InputAdornment, InputLabel, List, ListItemSecondaryAction, ListItemText, MenuItem, OutlinedInput, Select, Step, StepContent, StepLabel, Stepper, Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import { KeyboardArrowLeft } from '@material-ui/icons';
 import { useWeb3React } from '@web3-react/core';
@@ -10,6 +10,7 @@ import { useMainContract } from '../../hooks';
 import { useThirmContract } from './../../hooks/index';
 import config from './../../utils/config/index';
 import { getThirmTokenContract } from './../../utils/index';
+import { StyledButton, StyledInputArea, StyledListItem } from './../globalStyle';
 import { WithdrawWrapper } from './style';
 
 function getSteps() {
@@ -218,42 +219,50 @@ function Withdraw() {
     <WithdrawWrapper>
       {
         currentStep === 0 && <>
-          <FormControl variant="outlined" fullWidth>
-            <OutlinedInput
-              value={values.amount}
-              onChange={handleChange('amount')}
-              endAdornment={<InputAdornment position="end">{tokensList[values.asset].name}</InputAdornment>}
-              aria-describedby="outlined-amount-helper-text"
-              labelWidth={0}
-            />
-            <FormHelperText id="outlined-amount-helper-text">Amount</FormHelperText>
-          </FormControl>
-          <FormControl variant="outlined" fullWidth>
-            <OutlinedInput
-              value={values.address}
-              onChange={handleChange('address')}
-              aria-describedby="outlined-amount-helper-text"
-              labelWidth={0}
-            />
-            <FormHelperText id="outlined-amount-helper-text">Destination {tokensList[values.asset].coin} Address</FormHelperText>
-          </FormControl>
+          <StyledInputArea>
+            <FormControl variant="outlined" fullWidth>
+              <InputLabel htmlFor="outlined-adornment-amount">Amount</InputLabel>
+              <OutlinedInput
+                value={values.amount}
+                onChange={handleChange('amount')}
+                endAdornment={<InputAdornment position="end">{tokensList[values.asset].name}</InputAdornment>}
+                id="outlined-adornment-amount"
+                labelWidth={60}
+                type="number"
+              />
+            </FormControl>
+          </StyledInputArea>
+          <StyledInputArea>
+            <FormControl variant="outlined" fullWidth>
+              <InputLabel htmlFor="outlined-adornment-amount">Destination {tokensList[values.asset].coin} Address</InputLabel>
+              <OutlinedInput
+                value={values.address}
+                onChange={handleChange('address')}
+                aria-describedby="outlined-amount-helper-text"
+                labelWidth={200}
+                id="outlined-adornment-address"
+              />
+            </FormControl>
+          </StyledInputArea>
           <List>
-            <ListItem>
-              <ListItemText id="switch-list-label-bluetooth" primary="Asset" />
+            <StyledListItem>
+              <ListItemText primary="Asset" />
               <ListItemSecondaryAction>
-                <FormControl>
+                <FormControl variant="outlined">
                   <Select
                     value={values.asset}
                     onChange={handleChange('asset')}
                   >
                     {
-                      tokensList.map((tkn) =>
-                        <MenuItem value={tkn.id}>
+                      tokensList.map((tkn, index) =>
+                        <MenuItem value={index}>
                           <Grid container
                             direction="row"
                             justify="flex-start"
                             alignItems="center">
-                            <Avatar alt={tkn.name} src={tkn.image} />
+                            <Avatar alt={tkn.name} src={tkn.image} style={{
+                              width: 24, height: 24
+                            }} />
                             <Typography style={{ marginLeft: 16, marginRight: 16 }}>
                               {tkn.coin}
                             </Typography>
@@ -264,18 +273,18 @@ function Withdraw() {
                   </Select>
                 </FormControl>
               </ListItemSecondaryAction>
-            </ListItem>
+            </StyledListItem>
 
-            <ListItem>
-              <ListItemText id="switch-list-label-bluetooth" primary="You will Receive" />
+            <StyledListItem>
+              <ListItemText primary="You will Receive" />
               <ListItemSecondaryAction>
                 <p>{tokensList[values.asset].coin}</p>
               </ListItemSecondaryAction>
-            </ListItem>
+            </StyledListItem>
           </List>
-          <Button fullWidth variant="contained" color="primary" onClick={onNext} disabled={!values.amount || !values.address}>
+          <StyledButton fullWidth variant="contained" color="primary" onClick={onNext} disabled={!values.amount || !values.address}>
             Next
-          </Button>
+          </StyledButton>
         </>
       }
 
@@ -295,40 +304,40 @@ function Withdraw() {
                       index === 0 && <>
                         <List>
 
-                          <ListItem>
-                            <ListItemText id="switch-list-label-bluetooth" primary="Asset" />
+                          <StyledListItem>
+                            <ListItemText primary="Asset" />
                             <ListItemSecondaryAction>
                               {tokensList[values.asset].coin}
                             </ListItemSecondaryAction>
-                          </ListItem>
+                          </StyledListItem>
 
-                          <ListItem>
-                            <ListItemText id="switch-list-label-bluetooth" primary="Amount" />
+                          <StyledListItem>
+                            <ListItemText primary="Amount" />
                             <ListItemSecondaryAction>
                               {values.amount} {tokensList[values.asset].coin}
                             </ListItemSecondaryAction>
-                          </ListItem>
+                          </StyledListItem>
 
-                          <ListItem>
-                            <ListItemText id="switch-list-label-bluetooth" primary={`${tokensList[values.asset].coin} Address`} />
+                          <StyledListItem>
+                            <ListItemText primary={`${tokensList[values.asset].coin} Address`} />
                             <ListItemSecondaryAction>
                               <p>{values.address.slice(0, 15)}...</p>
                             </ListItemSecondaryAction>
-                          </ListItem>
+                          </StyledListItem>
 
-                          <ListItem>
-                            <ListItemText id="switch-list-label-bluetooth" primary="Destination" />
+                          <StyledListItem>
+                            <ListItemText primary="Destination" />
                             <ListItemSecondaryAction>
                               <p>{account.slice(0, 10)}...</p>
                             </ListItemSecondaryAction>
-                          </ListItem>
+                          </StyledListItem>
 
-                          <ListItem>
-                            <ListItemText id="switch-list-label-bluetooth" primary="You will Receive" />
+                          <StyledListItem>
+                            <ListItemText primary="You will Receive" />
                             <ListItemSecondaryAction>
                               <p>{tokensList[values.asset].name}</p>
                             </ListItemSecondaryAction>
-                          </ListItem>
+                          </StyledListItem>
                         </List>
 
                         <div className="button-groups">
@@ -338,14 +347,14 @@ function Withdraw() {
                           >
                             Back
                           </Button>
-                          <Button
+                          <StyledButton
                             fullWidth
                             variant="contained"
                             color="primary"
                             onClick={startWithdraw}
                           >
                             Continue
-                          </Button>
+                          </StyledButton>
                         </div>
                       </>
                     }
@@ -359,14 +368,14 @@ function Withdraw() {
                           >
                             Back
                           </Button>
-                          <Button
+                          <StyledButton
                             fullWidth
                             variant="contained"
                             color="primary"
                             onClick={approveThirm}
                           >
                             {processingApproval && <CircularProgress size={24} />} Approve THIRM
-                          </Button>
+                          </StyledButton>
                         </div>
                       </>
                     }
@@ -380,14 +389,14 @@ function Withdraw() {
                           >
                             Back
                           </Button>
-                          <Button
+                          <StyledButton
                             fullWidth
                             variant="contained"
                             color="primary"
                             onClick={approveCurrentToken}
                           >
                             {processingApproval && <CircularProgress size={24} />} Approve {tokensList[values.asset].name}
-                          </Button>
+                          </StyledButton>
                         </div>
                       </>
                     }
@@ -401,9 +410,9 @@ function Withdraw() {
                           >
                             Back
                           </Button>
-                          <Button fullWidth variant="contained" color="primary" onClick={withdrawCoin}>
+                          <StyledButton fullWidth variant="contained" color="primary" onClick={withdrawCoin}>
                             Withdraw
-                        </Button>
+                        </StyledButton>
                         </div>
                       </>
                     }
@@ -412,8 +421,6 @@ function Withdraw() {
               </Step>
             ))}
           </Stepper>
-
-
         </>
 
       }
