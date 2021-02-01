@@ -58,7 +58,7 @@ function HeaderBar() {
 
   return (
     <HeaderWrapper>
-      <h3>THIRM Bridge</h3>
+      <h3>THIRM BRIDGE</h3>
       <>
         {active && <>
 
