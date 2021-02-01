@@ -176,7 +176,7 @@ function Deposit() {
       {
         currentStep === 1 && <>
           {
-            coinAddressMapped && <Grid container
+            !coinAddressMapped && <Grid container
               direction="column"
               justify="center"
               alignItems="flex-start">
@@ -192,7 +192,7 @@ function Deposit() {
           }
 
           {
-            !coinAddressMapped && <>
+            coinAddressMapped && <>
               <Button color="primary" onClick={onBack}>
                 <KeyboardArrowLeft /> Go Back
             </Button>
