@@ -1,6 +1,9 @@
 import { Web3Provider } from '@ethersproject/providers';
 import { Web3ReactProvider } from '@web3-react/core';
 import { BrowserRouter as Router } from 'react-router-dom';
+import {
+  RecoilRoot
+} from 'recoil';
 import MainContent from './container/index';
 
 function getLibrary(provider) {
@@ -11,11 +14,13 @@ function getLibrary(provider) {
 
 function App() {
   return (
-    <Web3ReactProvider getLibrary={getLibrary}>
-      <Router>
-        <MainContent />
-      </Router>
-    </Web3ReactProvider>
+    <RecoilRoot>
+      <Web3ReactProvider getLibrary={getLibrary}>
+        <Router>
+          <MainContent />
+        </Router>
+      </Web3ReactProvider>
+    </RecoilRoot>
   );
 }
 

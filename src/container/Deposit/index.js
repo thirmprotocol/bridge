@@ -1,15 +1,18 @@
-import { Avatar, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, Grid, InputAdornment, InputLabel, List, ListItemSecondaryAction, ListItemText, MenuItem, OutlinedInput, Select, Slide, Typography } from '@material-ui/core';
+import { Avatar, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, Grid, InputAdornment, InputLabel, ListItemSecondaryAction, ListItemText, MenuItem, OutlinedInput, Select, Slide, Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import { KeyboardArrowLeft } from '@material-ui/icons';
 import { useWeb3React } from '@web3-react/core';
 import React, { useEffect, useState } from 'react';
 import QRCode from 'react-qr-code';
+import {
+  useRecoilState
+} from 'recoil';
 import oopsImage from '../../assets/images/oops.png';
 import { useMainContract } from '../../hooks';
 import config from './../../utils/config/index';
-import { StyledButton, StyledInputArea, StyledListItem } from './../globalStyle';
+import { addressState, amountState, assetState } from './../../utils/recoilState';
+import { StyledButton, StyledInputArea, StyledList, StyledListItem } from './../globalStyle';
 import { DepositWrapper } from './style';
-
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -17,11 +20,11 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 function Deposit() {
 
-  const [values, setValues] = useState({
-    amount: null,
-    asset: 0,
-    address: ""
-  });
+  const [amount, setAmount] = useRecoilState(amountState);
+
+  const [address, setAddress] = useRecoilState(addressState);
+
+  const [asset, setAsset] = useRecoilState(assetState);
 
   const [currentStep, setCurrentStep] = useState(0);
 
@@ -48,15 +51,17 @@ function Deposit() {
   }, []);
 
   const handleChange = (prop) => (event) => {
-    setValues({ ...values, [prop]: event.target.value });
+    if (prop === "amount") setAmount(event.target.value);
+    if (prop === "address") setAddress(event.target.value);
+    if (prop === "asset") setAsset(event.target.value);
   };
 
   const onNext = async () => {
-    if (!values.amount || !values.address || values.amount <= 0) return;
+    if (!amount || !address || amount <= 0) return;
 
     setCoinAddressMapped(false);
     try {
-      const mappedAddress = await mainContract.getAddressMap(values.address);
+      const mappedAddress = await mainContract.getAddressMap(address);
       if (mappedAddress !== '0x0000000000000000000000000000000000000000') {
         setCoinAddressMapped(true);
       }
@@ -93,9 +98,9 @@ function Deposit() {
             <FormControl variant="outlined" fullWidth>
               <InputLabel htmlFor="outlined-adornment-amount">Amount</InputLabel>
               <OutlinedInput
-                value={values.amount}
+                value={amount}
                 onChange={handleChange('amount')}
-                endAdornment={<InputAdornment position="end">{tokensList[values.asset].coin}</InputAdornment>}
+                endAdornment={<InputAdornment position="end">{tokensList[asset].coin}</InputAdornment>}
                 id="outlined-adornment-amount"
                 labelWidth={60}
                 type="number"
@@ -105,22 +110,22 @@ function Deposit() {
 
           <StyledInputArea>
             <FormControl variant="outlined" fullWidth >
-              <InputLabel htmlFor="outlined-adornment-address">{tokensList[values.asset].coin} Address</InputLabel>
+              <InputLabel htmlFor="outlined-adornment-address">{tokensList[asset].coin} Address</InputLabel>
               <OutlinedInput
-                value={values.address}
+                value={address}
                 onChange={handleChange('address')}
                 id="outlined-adornment-address"
                 labelWidth={110}
               />
             </FormControl>
           </StyledInputArea>
-          <List>
+          <StyledList>
             <StyledListItem>
               <ListItemText primary="Asset" />
               <ListItemSecondaryAction>
                 <FormControl variant="outlined">
                   <Select
-                    value={values.asset}
+                    value={asset}
                     onChange={handleChange('asset')}
                   >
                     {
@@ -155,13 +160,13 @@ function Deposit() {
             <StyledListItem>
               <ListItemText primary="You will Receive" />
               <ListItemSecondaryAction>
-                <p>{tokensList[values.asset].name}</p>
+                <p>{tokensList[asset].name}</p>
               </ListItemSecondaryAction>
             </StyledListItem>
 
-          </List>
+          </StyledList>
 
-          <StyledButton fullWidth variant="contained" color="primary" onClick={onNext} disabled={!values.amount || !values.address}>
+          <StyledButton fullWidth variant="contained" color="primary" onClick={onNext} disabled={!amount || !address}>
             Next
           </StyledButton>
         </>
@@ -191,26 +196,26 @@ function Deposit() {
                 <KeyboardArrowLeft /> Go Back
             </Button>
 
-              <List>
+              <StyledList>
 
                 <StyledListItem>
                   <ListItemText primary="Asset" />
                   <ListItemSecondaryAction>
-                    {tokensList[values.asset].coin}
+                    {tokensList[asset].coin}
                   </ListItemSecondaryAction>
                 </StyledListItem>
 
                 <StyledListItem>
                   <ListItemText primary="Amount" />
                   <ListItemSecondaryAction>
-                    {values.amount} {tokensList[values.asset].coin}
+                    {amount} {tokensList[asset].coin}
                   </ListItemSecondaryAction>
                 </StyledListItem>
 
                 <StyledListItem>
-                  <ListItemText primary={`${tokensList[values.asset].coin} Address`} />
+                  <ListItemText primary={`${tokensList[asset].coin} Address`} />
                   <ListItemSecondaryAction>
-                    <p>{values.address.slice(0, 15)}...</p>
+                    <p>{address.slice(0, 15)}...</p>
                   </ListItemSecondaryAction>
                 </StyledListItem>
 
@@ -224,10 +229,10 @@ function Deposit() {
                 <StyledListItem>
                   <ListItemText primary="You will Receive" />
                   <ListItemSecondaryAction>
-                    <p>{tokensList[values.asset].name}</p>
+                    <p>{tokensList[asset].name}</p>
                   </ListItemSecondaryAction>
                 </StyledListItem>
-              </List>
+              </StyledList>
               <StyledButton fullWidth variant="contained" color="primary" onClick={openDepositDialog}>
                 Deposit
             </StyledButton>
@@ -240,15 +245,15 @@ function Deposit() {
                 aria-labelledby="alert-dialog-slide-title"
                 aria-describedby="alert-dialog-slide-description"
               >
-                <DialogTitle id="alert-dialog-slide-title">{`Deposit ${tokensList[values.asset].coin}`}</DialogTitle>
+                <DialogTitle id="alert-dialog-slide-title">{`Deposit ${tokensList[asset].coin}`}</DialogTitle>
                 <DialogContent>
                   <DialogContentText id="alert-dialog-slide-description"
                     style={{ padding: 24, textAlign: "center" }}
                   >
-                    <QRCode value={tokensList[values.asset].depositAddress} size={250} />
+                    <QRCode value={tokensList[asset].depositAddress} size={250} />
                     <p>
 
-                      {tokensList[values.asset].depositAddress.slice(0, 25)}...
+                      {tokensList[asset].depositAddress.slice(0, 25)}...
 
                     </p>
                   </DialogContentText>

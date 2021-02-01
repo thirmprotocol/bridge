@@ -1,16 +1,20 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Avatar, CircularProgress, FormControl, Grid, InputAdornment, InputLabel, List, ListItemSecondaryAction, ListItemText, MenuItem, OutlinedInput, Select, Step, StepContent, StepLabel, Stepper, Typography } from '@material-ui/core';
+import { Avatar, CircularProgress, FormControl, Grid, InputAdornment, InputLabel, ListItemSecondaryAction, ListItemText, MenuItem, OutlinedInput, Select, Step, StepContent, StepLabel, Stepper, Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import { KeyboardArrowLeft } from '@material-ui/icons';
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
 import { parseEther } from 'ethers/lib/utils';
 import React, { useEffect } from 'react';
+import {
+  useRecoilState
+} from 'recoil';
 import { useMainContract } from '../../hooks';
 import { useThirmContract } from './../../hooks/index';
 import config from './../../utils/config/index';
 import { getThirmTokenContract } from './../../utils/index';
-import { StyledButton, StyledInputArea, StyledListItem } from './../globalStyle';
+import { addressState, amountState, assetState } from './../../utils/recoilState';
+import { StyledButton, StyledInputArea, StyledList, StyledListItem } from './../globalStyle';
 import { WithdrawWrapper } from './style';
 
 function getSteps() {
@@ -22,11 +26,11 @@ const ALLOWANCE_LIMIT = ethers.BigNumber.from("0xfffffffffffffffffffffffffffffff
 
 function Withdraw() {
 
-  const [values, setValues] = React.useState({
-    amount: null,
-    asset: 0,
-    address: ""
-  });
+  const [amount, setAmount] = useRecoilState(amountState);
+
+  const [address, setAddress] = useRecoilState(addressState);
+
+  const [asset, setAsset] = useRecoilState(assetState);
 
   const [currentStep, setCurrentStep] = React.useState(0);
 
@@ -73,7 +77,7 @@ function Withdraw() {
           }
 
         } else if (stepperPosition === 2) {
-          const tokenContract = getThirmTokenContract(library, account, tokensList[values.asset].address);
+          const tokenContract = getThirmTokenContract(library, account, tokensList[asset].address);
 
           const tokenAllowance = await tokenContract.allowance(account, config.CONTRACT_ADDRESS);
 
@@ -97,19 +101,21 @@ function Withdraw() {
   }, [tokensList, stepperPosition]);
 
   const handleChange = (prop) => (event) => {
-    setValues({ ...values, [prop]: event.target.value });
+    if (prop === "amount") setAmount(event.target.value);
+    if (prop === "address") setAddress(event.target.value);
+    if (prop === "asset") setAsset(event.target.value);
   };
 
   const onNext = async () => {
-    if (!values.amount || !values.address || values.amount <= 0) return;
+    if (!amount || !address || amount <= 0) return;
     setCurrentStep(1);
   }
 
   const withdrawCoin = async () => {
 
     try {
-      const tknAmount = parseEther(values.amount);
-      const withdrawed = await mainContract.registerWithdrawal(tokensList[values.asset].coin, values.address, tknAmount, {
+      const tknAmount = parseEther(amount);
+      const withdrawed = await mainContract.registerWithdrawal(tokensList[asset].coin, address, tknAmount, {
         gasLimit: 500000
       });
 
@@ -183,7 +189,7 @@ function Withdraw() {
 
     try {
 
-      const tokenContract = getThirmTokenContract(library, account, tokensList[values.asset].address);
+      const tokenContract = getThirmTokenContract(library, account, tokensList[asset].address);
 
       const tokenAllowance = await tokenContract.allowance(account, config.CONTRACT_ADDRESS);
 
@@ -223,9 +229,9 @@ function Withdraw() {
             <FormControl variant="outlined" fullWidth>
               <InputLabel htmlFor="outlined-adornment-amount">Amount</InputLabel>
               <OutlinedInput
-                value={values.amount}
+                value={amount}
                 onChange={handleChange('amount')}
-                endAdornment={<InputAdornment position="end">{tokensList[values.asset].name}</InputAdornment>}
+                endAdornment={<InputAdornment position="end">{tokensList[asset].name}</InputAdornment>}
                 id="outlined-adornment-amount"
                 labelWidth={60}
                 type="number"
@@ -234,9 +240,9 @@ function Withdraw() {
           </StyledInputArea>
           <StyledInputArea>
             <FormControl variant="outlined" fullWidth>
-              <InputLabel htmlFor="outlined-adornment-amount">Destination {tokensList[values.asset].coin} Address</InputLabel>
+              <InputLabel htmlFor="outlined-adornment-amount">Destination {tokensList[asset].coin} Address</InputLabel>
               <OutlinedInput
-                value={values.address}
+                value={address}
                 onChange={handleChange('address')}
                 aria-describedby="outlined-amount-helper-text"
                 labelWidth={200}
@@ -244,13 +250,13 @@ function Withdraw() {
               />
             </FormControl>
           </StyledInputArea>
-          <List>
+          <StyledList>
             <StyledListItem>
               <ListItemText primary="Asset" />
               <ListItemSecondaryAction>
                 <FormControl variant="outlined">
                   <Select
-                    value={values.asset}
+                    value={asset}
                     onChange={handleChange('asset')}
                   >
                     {
@@ -278,11 +284,11 @@ function Withdraw() {
             <StyledListItem>
               <ListItemText primary="You will Receive" />
               <ListItemSecondaryAction>
-                <p>{tokensList[values.asset].coin}</p>
+                <p>{tokensList[asset].coin}</p>
               </ListItemSecondaryAction>
             </StyledListItem>
-          </List>
-          <StyledButton fullWidth variant="contained" color="primary" onClick={onNext} disabled={!values.amount || !values.address}>
+          </StyledList>
+          <StyledButton fullWidth variant="contained" color="primary" onClick={onNext} disabled={!amount || !address}>
             Next
           </StyledButton>
         </>
@@ -302,26 +308,26 @@ function Withdraw() {
                   <div>
                     {
                       index === 0 && <>
-                        <List>
+                        <StyledList>
 
                           <StyledListItem>
                             <ListItemText primary="Asset" />
                             <ListItemSecondaryAction>
-                              {tokensList[values.asset].coin}
+                              {tokensList[asset].coin}
                             </ListItemSecondaryAction>
                           </StyledListItem>
 
                           <StyledListItem>
                             <ListItemText primary="Amount" />
                             <ListItemSecondaryAction>
-                              {values.amount} {tokensList[values.asset].coin}
+                              {amount} {tokensList[asset].coin}
                             </ListItemSecondaryAction>
                           </StyledListItem>
 
                           <StyledListItem>
-                            <ListItemText primary={`${tokensList[values.asset].coin} Address`} />
+                            <ListItemText primary={`${tokensList[asset].coin} Address`} />
                             <ListItemSecondaryAction>
-                              <p>{values.address.slice(0, 15)}...</p>
+                              <p>{address.slice(0, 15)}...</p>
                             </ListItemSecondaryAction>
                           </StyledListItem>
 
@@ -335,10 +341,10 @@ function Withdraw() {
                           <StyledListItem>
                             <ListItemText primary="You will Receive" />
                             <ListItemSecondaryAction>
-                              <p>{tokensList[values.asset].name}</p>
+                              <p>{tokensList[asset].name}</p>
                             </ListItemSecondaryAction>
                           </StyledListItem>
-                        </List>
+                        </StyledList>
 
                         <div className="button-groups">
                           <Button
@@ -395,7 +401,7 @@ function Withdraw() {
                             color="primary"
                             onClick={approveCurrentToken}
                           >
-                            {processingApproval && <CircularProgress size={24} />} Approve {tokensList[values.asset].name}
+                            {processingApproval && <CircularProgress size={24} />} Approve {tokensList[asset].name}
                           </StyledButton>
                         </div>
                       </>
