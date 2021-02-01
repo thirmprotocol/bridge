@@ -7,7 +7,7 @@ export const HeaderWrapper = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-
+  margin-bottom: 36px;
   .account-address {
     margin-left: 8px;
   }
@@ -30,7 +30,7 @@ export const ConnectionCard = styled(Card)`
      padding: 4px;
      height: 35px;
      p {
-       color: blue;
+       color: #0652DD;
      }
    }
  }

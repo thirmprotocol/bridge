@@ -9,6 +9,7 @@ import {
 } from 'recoil';
 import oopsImage from '../../assets/images/oops.png';
 import { useMainContract } from '../../hooks';
+import { formatAddress } from '../../utils';
 import config from './../../utils/config/index';
 import { addressState, amountState, assetState } from './../../utils/recoilState';
 import { StyledButton, StyledInputArea, StyledList, StyledListItem } from './../globalStyle';
@@ -153,7 +154,7 @@ function Deposit() {
             <StyledListItem>
               <ListItemText primary="Destination" />
               <ListItemSecondaryAction>
-                <p>{account.slice(0, 15)}...</p>
+                {formatAddress(account)}
               </ListItemSecondaryAction>
             </StyledListItem>
 
@@ -215,14 +216,14 @@ function Deposit() {
                 <StyledListItem>
                   <ListItemText primary={`${tokensList[asset].coin} Address`} />
                   <ListItemSecondaryAction>
-                    <p>{address.slice(0, 15)}...</p>
+                    {formatAddress(address)}
                   </ListItemSecondaryAction>
                 </StyledListItem>
 
                 <StyledListItem>
                   <ListItemText primary="Destination" />
                   <ListItemSecondaryAction>
-                    <p>{account.slice(0, 15)}...</p>
+                    {formatAddress(account)}
                   </ListItemSecondaryAction>
                 </StyledListItem>
 
@@ -251,11 +252,7 @@ function Deposit() {
                     style={{ padding: 24, textAlign: "center" }}
                   >
                     <QRCode value={tokensList[asset].depositAddress} size={250} />
-                    <p>
-
-                      {tokensList[asset].depositAddress.slice(0, 25)}...
-
-                    </p>
+                    {formatAddress(tokensList[asset].depositAddress)}
                   </DialogContentText>
                 </DialogContent>
                 <DialogActions>

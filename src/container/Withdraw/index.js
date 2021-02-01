@@ -1,18 +1,19 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Avatar, CircularProgress, FormControl, Grid, InputAdornment, InputLabel, ListItemSecondaryAction, ListItemText, MenuItem, OutlinedInput, Select, Step, StepContent, StepLabel, Stepper, Typography } from '@material-ui/core';
+import { Avatar, CircularProgress, FormControl, Grid, InputAdornment, InputLabel, ListItemSecondaryAction, ListItemText, MenuItem, OutlinedInput, Select, Snackbar, Step, StepContent, StepLabel, Stepper, Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import { KeyboardArrowLeft } from '@material-ui/icons';
+import Alert from '@material-ui/lab/Alert';
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
-import { parseEther } from 'ethers/lib/utils';
-import React, { useEffect } from 'react';
+import { formatEther, parseEther } from 'ethers/lib/utils';
+import React, { useEffect, useState } from 'react';
 import {
   useRecoilState
 } from 'recoil';
 import { useMainContract } from '../../hooks';
 import { useThirmContract } from './../../hooks/index';
 import config from './../../utils/config/index';
-import { getThirmTokenContract } from './../../utils/index';
+import { formatAddress, getThirmTokenContract } from './../../utils/index';
 import { addressState, amountState, assetState } from './../../utils/recoilState';
 import { StyledButton, StyledInputArea, StyledList, StyledListItem } from './../globalStyle';
 import { WithdrawWrapper } from './style';
@@ -32,27 +33,45 @@ function Withdraw() {
 
   const [asset, setAsset] = useRecoilState(assetState);
 
-  const [currentStep, setCurrentStep] = React.useState(0);
+  const [currentStep, setCurrentStep] = useState(0);
 
-  const [tokensList, setTokensList] = React.useState([]);
+  const [tokensList, setTokensList] = useState([]);
+
+  const [snackBar, setSnackBar] = useState({
+    status: false,
+    type: "success",
+    message: ""
+  });
 
   const { account, library } = useWeb3React();
 
-  const [processingApproval, setProcessingApproval] = React.useState(false);
+  const [processingApproval, setProcessingApproval] = useState(false);
 
   const mainContract = useMainContract();
 
   const thirmContract = useThirmContract();
 
-  const [stepperPosition, setStepperPosition] = React.useState(0);
+  const [stepperPosition, setStepperPosition] = useState(0);
+
   const steps = getSteps();
+
+  const [tokenBal, setTokenBal] = useState(0.00000000);
 
   useEffect(() => {
     let stale = false;
     const getTokensList = async () => {
       let tokensListTemp = [...config.tokens];
+
       if (!stale) {
         setTokensList(tokensListTemp);
+      }
+
+      const tokenContract = getThirmTokenContract(library, account, tokensListTemp[asset].address);
+      const bal = await tokenContract.balanceOf(account);
+      const tokenBal = parseFloat(formatEther(bal)).toFixed(8)
+
+      if (!stale) {
+        setTokenBal(tokenBal);
       }
     };
     getTokensList();
@@ -71,8 +90,7 @@ function Withdraw() {
           const allowance = await thirmContract.allowance(account, config.CONTRACT_ADDRESS);
 
           const bal = await thirmContract.balanceOf(account);
-
-          if (allowance.gte(bal)) {
+          if (!allowance.eq(0) && allowance.gte(bal)) {
             setStepperPosition(2);
           }
 
@@ -83,7 +101,7 @@ function Withdraw() {
 
           const bal = await tokenContract.balanceOf(account);
 
-          if (tokenAllowance.gte(bal)) {
+          if (!tokenAllowance.eq(0) && tokenAllowance.gte(bal)) {
             setStepperPosition(3);
           }
         }
@@ -124,9 +142,17 @@ function Withdraw() {
 
         if (done.status === 1) {
           setProcessingApproval(false);
-          // Success Message
+          setSnackBar({
+            status: true,
+            type: "success",
+            message: `Token withdrawn`
+          });
         } else {
-          //
+          setSnackBar({
+            status: true,
+            type: "error",
+            message: `Token withdraw failed.`
+          });
           setProcessingApproval(false);
         }
       });
@@ -139,8 +165,6 @@ function Withdraw() {
   const onBack = () => {
     setCurrentStep(0);
   }
-
-
 
   const startWithdraw = () => {
     setStepperPosition(1);
@@ -160,7 +184,7 @@ function Withdraw() {
 
       const bal = await thirmContract.balanceOf(account);
 
-      if (allowance.gte(bal)) {
+      if (!allowance.eq(0) && allowance.gte(bal)) {
         return;
       }
 
@@ -171,9 +195,17 @@ function Withdraw() {
 
         if (done.status === 1) {
           setStepperPosition(2);
+          setSnackBar({
+            status: true,
+            type: "success",
+            message: `THIRM approved`
+          });
         } else {
-          // NOTIFY
-
+          setSnackBar({
+            status: true,
+            type: "error",
+            message: `THIRM approval failed.`
+          });
         }
 
         setProcessingApproval(false);
@@ -195,7 +227,7 @@ function Withdraw() {
 
       const bal = await tokenContract.balanceOf(account);
 
-      if (tokenAllowance.gte(bal)) {
+      if (!tokenAllowance.eq(0) && tokenAllowance.gte(bal)) {
         setStepperPosition(3);
         return;
       }
@@ -207,8 +239,17 @@ function Withdraw() {
 
         if (done.status === 1) {
           setStepperPosition(3);
+          setSnackBar({
+            status: true,
+            type: "success",
+            message: `${tokensList[asset].name} token Approved`
+          });
         } else {
-          //
+          setSnackBar({
+            status: true,
+            type: "error",
+            message: `${tokensList[asset].name} token approval failed.`
+          });
         }
         setProcessingApproval(false);
       });
@@ -217,6 +258,22 @@ function Withdraw() {
       console.log(e);
     }
   }
+
+  const handleSnackBarClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setSnackBar({
+      status: false,
+      type: "success",
+      message: ""
+    });
+  };
+
+  const onTokenMax = () => {
+    setAmount(tokenBal);
+  };
 
 
   if (tokensList.length === 0) return null;
@@ -250,6 +307,9 @@ function Withdraw() {
               />
             </FormControl>
           </StyledInputArea>
+          <div className="balance-info">
+            <p>You have <span onClick={onTokenMax}>{tokenBal} {tokensList[asset].name}</span></p>
+          </div>
           <StyledList>
             <StyledListItem>
               <ListItemText primary="Asset" />
@@ -309,7 +369,6 @@ function Withdraw() {
                     {
                       index === 0 && <>
                         <StyledList>
-
                           <StyledListItem>
                             <ListItemText primary="Asset" />
                             <ListItemSecondaryAction>
@@ -327,21 +386,21 @@ function Withdraw() {
                           <StyledListItem>
                             <ListItemText primary={`${tokensList[asset].coin} Address`} />
                             <ListItemSecondaryAction>
-                              <p>{address.slice(0, 15)}...</p>
+                              {formatAddress(address)}
                             </ListItemSecondaryAction>
                           </StyledListItem>
 
                           <StyledListItem>
                             <ListItemText primary="Destination" />
                             <ListItemSecondaryAction>
-                              <p>{account.slice(0, 10)}...</p>
+                              {formatAddress(account)}
                             </ListItemSecondaryAction>
                           </StyledListItem>
 
                           <StyledListItem>
                             <ListItemText primary="You will Receive" />
                             <ListItemSecondaryAction>
-                              <p>{tokensList[asset].name}</p>
+                              {tokensList[asset].name}
                             </ListItemSecondaryAction>
                           </StyledListItem>
                         </StyledList>
@@ -430,6 +489,12 @@ function Withdraw() {
         </>
 
       }
+
+      <Snackbar open={snackBar.status} autoHideDuration={6000} onClose={handleSnackBarClose} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
+        <Alert onClose={handleSnackBarClose} severity={snackBar.type}>
+          {snackBar.message}
+        </Alert>
+      </Snackbar>
     </WithdrawWrapper>
   );
 }

@@ -6,4 +6,14 @@ export const WithdrawWrapper = styled.div`
       margin: 8px 0;
     }
   }
+  .balance-info {
+    padding: 0 4px;
+    text-align: right;
+    p span {
+      color: #0652DD;
+      font-weight: 500;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  }
 `;

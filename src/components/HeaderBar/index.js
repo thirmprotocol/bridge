@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import LoginKeyIcon from '../../assets/images/login-key.svg';
 import MetaMaskIcon from '../../assets/images/metamask.png';
+import { formatAddress } from '../../utils';
 import { injected } from './../../hooks/connectors';
 import config from './../../utils/config/index';
 import { ConnectionCard, HeaderWrapper } from './style';
@@ -67,7 +68,7 @@ function HeaderBar() {
               width: 32, height: 32
             }} />
             <span className="account-address">
-              {account && account.substr(0, 4)}...{account && account.substr(36)}
+              {account && formatAddress(account)}
             </span>
           </Button>
           <Popover
@@ -101,7 +102,6 @@ function HeaderBar() {
               </ul>
 
               <Button
-                color="secondary"
                 variant="contained"
                 fullWidth
                 onClick={() => {
@@ -109,6 +109,12 @@ function HeaderBar() {
                   localStorage.removeItem('wallet');
                   deactivate();
                   history.push('/');
+                }}
+                style={{
+                  backgroundColor: "#e74c3c",
+                  color: "#fff",
+                  marginTop: 8,
+                  marginBottom: 8
                 }}
               >
                 Disconnect

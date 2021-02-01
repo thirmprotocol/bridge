@@ -3,11 +3,10 @@ import styled from 'styled-components';
 
 
 export const MainWrapper = styled.div`
-  margin: 80px auto;
+  margin: auto 0px;
 `;
 
 export const MainCard = styled(Card)`
-  min-height: 600px;
   box-shadow: 0 5px 10px rgba(154, 160, 185, 0.05), 0 15px 40px rgba(166, 173, 201, 0.1);
 `
 

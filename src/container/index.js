@@ -6,7 +6,6 @@ import HeaderBar from './../components/HeaderBar/index';
 import { MainContentWrapper } from './globalStyle';
 import MainPage from './MainPage/index';
 import Web3Wrapper from './Web3Wrapper/index';
-
 function MainContent() {
 
   return (

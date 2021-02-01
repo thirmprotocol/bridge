@@ -1,4 +1,5 @@
 import { Web3Provider } from '@ethersproject/providers';
+import { createMuiTheme, ThemeProvider } from '@material-ui/core';
 import { Web3ReactProvider } from '@web3-react/core';
 import { BrowserRouter as Router } from 'react-router-dom';
 import {
@@ -12,15 +13,28 @@ function getLibrary(provider) {
   return library;
 }
 
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: "#0652DD",
+    },
+    secondary: {
+      main: "#12CBC4",
+    },
+  },
+});
+
 function App() {
   return (
-    <RecoilRoot>
-      <Web3ReactProvider getLibrary={getLibrary}>
-        <Router>
-          <MainContent />
-        </Router>
-      </Web3ReactProvider>
-    </RecoilRoot>
+    <ThemeProvider theme={theme}>
+      <RecoilRoot>
+        <Web3ReactProvider getLibrary={getLibrary}>
+          <Router>
+            <MainContent />
+          </Router>
+        </Web3ReactProvider>
+      </RecoilRoot>
+    </ThemeProvider>
   );
 }
 
