@@ -47,11 +47,13 @@ const ConnectWallet = (props) => {
               </div>
             );
           })}
-        {!!error && <Alert severity="error">
-          {
-            getErrorMessage(error)
-          }
-        </Alert>}
+        <div className="error-message">
+          {!!error && <Alert severity="error">
+            {
+              getErrorMessage(error)
+            }
+          </Alert>}
+        </div>
       </ConnectWrapper>
     </Grid>
   );

@@ -1,4 +1,5 @@
 import { AppBar, Card } from '@material-ui/core';
+import Alert from '@material-ui/lab/Alert';
 import styled from 'styled-components';
 
 
@@ -18,5 +19,9 @@ export const MainAppBar = styled(AppBar)`
   .MuiTabs-flexContainer {
     height: 60px;
   }
+`;
 
+export const MainAlert = styled(Alert)`
+  margin: 24px 0;
+  text-align: center;
 `

@@ -1,3 +1,4 @@
+import { CircularProgress } from '@material-ui/core';
 import { useWeb3React } from '@web3-react/core';
 import React, { useEffect, useState } from 'react';
 import { Route, Switch } from 'react-router-dom';
@@ -37,7 +38,7 @@ function Web3Wrapper({ children }) {
   }
 
   if (activatingConnector) {
-    return <p>Loading...</p>;
+    return <CircularProgress style={{ margin: "auto" }} />;
   }
 
   return (

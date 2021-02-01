@@ -2,7 +2,7 @@ import { Box, CardContent, Container, Tab, Tabs } from '@material-ui/core';
 import React from 'react';
 import Deposit from './../Deposit/index';
 import Withdraw from './../Withdraw/index';
-import { MainAppBar, MainCard, MainWrapper } from './style';
+import { MainAlert, MainAppBar, MainCard, MainWrapper } from './style';
 
 
 function TabPanel(props) {
@@ -37,6 +37,9 @@ function MainPage() {
     <MainWrapper>
       <Container maxWidth="xs"
       >
+        <MainAlert icon={false} severity="success" variant="outlined">
+          ThirmVM is currently work in progress. Please don’t use assets you can’t afford to lose.
+      </MainAlert>
         <MainCard elevation={0}>
           <MainAppBar position="static" elevation={0}>
             <Tabs
