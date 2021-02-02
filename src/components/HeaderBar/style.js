@@ -1,6 +1,24 @@
 import { Card } from '@material-ui/core';
 import styled from 'styled-components';
 
+export const LogoWrapper = styled.div`
+display: flex;
+flex-direction: row;
+align-items: center;
+justify-content: center;
+  img {
+    width: 32px;
+    height: 32px;
+    margin-right: 8px;
+  }
+  h3 {
+    font-size: 20px;
+    font-weight: 700;
+    font-family: 'Raleway', sans-serif;
+  }
+
+`;
+
 
 export const HeaderWrapper = styled.div`
   display: flex;

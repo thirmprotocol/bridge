@@ -3,13 +3,12 @@ import { Avatar, Popover } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import { useWeb3React } from '@web3-react/core';
 import { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
-import LoginKeyIcon from '../../assets/images/login-key.svg';
+import { Link, useHistory } from 'react-router-dom';
 import MetaMaskIcon from '../../assets/images/metamask.png';
 import { formatAddress } from '../../utils';
 import { injected } from './../../hooks/connectors';
 import config from './../../utils/config/index';
-import { ConnectionCard, HeaderWrapper } from './style';
+import { ConnectionCard, HeaderWrapper, LogoWrapper } from './style';
 
 
 function HeaderBar() {
@@ -34,8 +33,6 @@ function HeaderBar() {
 
       if (connector === injected) {
         setWalletIcon(MetaMaskIcon);
-      } else {
-        setWalletIcon(LoginKeyIcon);
       }
     };
 
@@ -59,11 +56,16 @@ function HeaderBar() {
 
   return (
     <HeaderWrapper>
-      <h3>THIRM BRIDGE</h3>
+      <LogoWrapper>
+        <Link to="/">
+          <img src="https://avatars0.githubusercontent.com/u/67930090?s=200&v=4" alt="thirm" />
+        </Link>
+        <h3>THIRM BRIDGE</h3>
+      </LogoWrapper>
       <>
         {active && <>
 
-          <Button aria-describedby={id} color="primary" onClick={handleClick}>
+          <Button color="primary" onClick={handleClick}>
             <Avatar src={walletIcon} alt="wallet" variant="circular" style={{
               width: 32, height: 32
             }} />
@@ -127,12 +129,9 @@ function HeaderBar() {
 
         {
           !active && <>
-            <Button variant="outlined" aria-describedby={id} color="primary" onClick={handleClick}>
-              <Avatar src={LoginKeyIcon} alt="wallet" variant="circular" style={{
-                width: 32, height: 32
-              }} />
+            <Button variant="outlined" color="primary">
               <span>
-                Connect
+                Not Connected
               </span>
             </Button>
           </>

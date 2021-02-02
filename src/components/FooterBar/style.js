@@ -5,8 +5,8 @@ export const FooterWrapper = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  margin-top: 36px;
-  height: 60px;
+  padding-top: 40px;
+  padding-bottom: 40px;
   width: 100%;
   .footer-menu {
     margin: 0;
@@ -16,6 +16,10 @@ export const FooterWrapper = styled.div`
       padding: 4px;
       display: inline-block;
     }
+  }
+
+  @media (max-width: 600px) {
+    flex-direction: column;
   }
   
 `;

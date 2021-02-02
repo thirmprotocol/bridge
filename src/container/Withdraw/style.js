@@ -1,4 +1,4 @@
-import { StepContent } from '@material-ui/core';
+import { Stepper } from '@material-ui/core';
 import styled from 'styled-components';
 
 export const WithdrawWrapper = styled.div`
@@ -19,6 +19,7 @@ export const WithdrawWrapper = styled.div`
   }
 `;
 
-export const StyledStepContent = styled(StepContent)`
+export const StyledStepper = styled(Stepper)`
+  margin-left: -25px;
   margin-right: -30px;
 `;

@@ -1,6 +1,6 @@
 import { Avatar, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, Grid, InputAdornment, InputLabel, ListItemSecondaryAction, ListItemText, MenuItem, OutlinedInput, Select, Slide, Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
-import { KeyboardArrowLeft } from '@material-ui/icons';
+import { KeyboardArrowLeft, TrendingFlat } from '@material-ui/icons';
 import { useWeb3React } from '@web3-react/core';
 import React, { useEffect, useState } from 'react';
 import QRCode from 'react-qr-code';
@@ -12,7 +12,7 @@ import { useMainContract } from '../../hooks';
 import { formatAddress } from '../../utils';
 import config from './../../utils/config/index';
 import { addressState, amountState, assetState } from './../../utils/recoilState';
-import { StyledButton, StyledInputArea, StyledList, StyledListItem } from './../globalStyle';
+import { GoBackButton, StyledButton, StyledInputArea, StyledList, StyledListItem } from './../globalStyle';
 import { DepositWrapper } from './style';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -168,7 +168,8 @@ function Deposit() {
           </StyledList>
 
           <StyledButton fullWidth variant="contained" color="primary" onClick={onNext} disabled={!amount || !address}>
-            Next
+            <span>Next</span>
+            <TrendingFlat />
           </StyledButton>
         </>
       }
@@ -180,9 +181,9 @@ function Deposit() {
               direction="column"
               justify="center"
               alignItems="flex-start">
-              <Button color="primary" onClick={onBack}>
+              <GoBackButton color="primary" onClick={onBack}>
                 <KeyboardArrowLeft /> Go Back
-            </Button>
+            </GoBackButton>
               <img className="deposit-error-image" src={oopsImage} alt="oops" />
               <p className="oops-message">
                 Your address is not mapped yet for deposit.<br />
@@ -193,9 +194,9 @@ function Deposit() {
 
           {
             coinAddressMapped && <>
-              <Button color="primary" onClick={onBack}>
+              <GoBackButton color="primary" onClick={onBack}>
                 <KeyboardArrowLeft /> Go Back
-            </Button>
+            </GoBackButton>
 
               <StyledList>
 

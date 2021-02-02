@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Avatar, CircularProgress, FormControl, Grid, InputAdornment, InputLabel, ListItemSecondaryAction, ListItemText, MenuItem, OutlinedInput, Select, Snackbar, Step, StepLabel, Stepper, Typography } from '@material-ui/core';
+import { Avatar, CircularProgress, FormControl, Grid, InputAdornment, InputLabel, ListItemSecondaryAction, ListItemText, MenuItem, OutlinedInput, Select, Snackbar, Step, StepContent, StepLabel, Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
-import { KeyboardArrowLeft } from '@material-ui/icons';
+import { KeyboardArrowLeft, TrendingFlat } from '@material-ui/icons';
 import Alert from '@material-ui/lab/Alert';
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
@@ -15,8 +15,8 @@ import { useThirmContract } from './../../hooks/index';
 import config from './../../utils/config/index';
 import { formatAddress, getThirmTokenContract } from './../../utils/index';
 import { addressState, amountState, assetState } from './../../utils/recoilState';
-import { StyledButton, StyledInputArea, StyledList, StyledListItem } from './../globalStyle';
-import { StyledStepContent, WithdrawWrapper } from './style';
+import { GoBackButton, StyledButton, StyledInputArea, StyledList, StyledListItem } from './../globalStyle';
+import { StyledStepper, WithdrawWrapper } from './style';
 
 function getSteps() {
   return ['Check withdraw information', 'Approve THIRM', 'Approve token', 'Finish Withdraw'];
@@ -55,7 +55,7 @@ function Withdraw() {
 
   const steps = getSteps();
 
-  const [tokenBal, setTokenBal] = useState(0.00000000);
+  const [tokenBal, setTokenBal] = useState("0.00000000");
 
   useEffect(() => {
     let stale = false;
@@ -349,22 +349,23 @@ function Withdraw() {
             </StyledListItem>
           </StyledList>
           <StyledButton fullWidth variant="contained" color="primary" onClick={onNext} disabled={!amount || !address}>
-            Next
+            <span>Next</span>
+            <TrendingFlat />
           </StyledButton>
         </>
       }
 
       {
         currentStep === 1 && <>
-          <Button color="primary" onClick={onBack}>
+          <GoBackButton color="primary" onClick={onBack}>
             <KeyboardArrowLeft /> Go Back
-          </Button>
+          </GoBackButton>
 
-          <Stepper activeStep={stepperPosition} orientation="vertical">
+          <StyledStepper activeStep={stepperPosition} orientation="vertical">
             {steps.map((label, index) => (
               <Step key={label}>
                 <StepLabel>{label}</StepLabel>
-                <StyledStepContent>
+                <StepContent>
                   {
                     index === 0 && <>
                       <StyledList>
@@ -410,8 +411,9 @@ function Withdraw() {
                           color="primary"
                           onClick={startWithdraw}
                         >
-                          Continue
-                          </StyledButton>
+                          <span>Continue</span>
+                          <TrendingFlat />
+                        </StyledButton>
                       </div>
                     </>
                   }
@@ -473,10 +475,10 @@ function Withdraw() {
                       </div>
                     </>
                   }
-                </StyledStepContent>
+                </StepContent>
               </Step>
             ))}
-          </Stepper>
+          </StyledStepper>
         </>
 
       }
