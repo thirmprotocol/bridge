@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Avatar, CircularProgress, FormControl, Grid, InputAdornment, InputLabel, ListItemSecondaryAction, ListItemText, MenuItem, OutlinedInput, Select, Snackbar, Step, StepContent, StepLabel, Stepper, Typography } from '@material-ui/core';
+import { Avatar, CircularProgress, FormControl, Grid, InputAdornment, InputLabel, ListItemSecondaryAction, ListItemText, MenuItem, OutlinedInput, Select, Snackbar, Step, StepLabel, Stepper, Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import { KeyboardArrowLeft } from '@material-ui/icons';
 import Alert from '@material-ui/lab/Alert';
@@ -16,7 +16,7 @@ import config from './../../utils/config/index';
 import { formatAddress, getThirmTokenContract } from './../../utils/index';
 import { addressState, amountState, assetState } from './../../utils/recoilState';
 import { StyledButton, StyledInputArea, StyledList, StyledListItem } from './../globalStyle';
-import { WithdrawWrapper } from './style';
+import { StyledStepContent, WithdrawWrapper } from './style';
 
 function getSteps() {
   return ['Check withdraw information', 'Approve THIRM', 'Approve token', 'Finish Withdraw'];
@@ -330,7 +330,7 @@ function Withdraw() {
                               width: 24, height: 24
                             }} />
                             <Typography style={{ marginLeft: 16, marginRight: 16 }}>
-                              {tkn.coin}
+                              {tkn.name}
                             </Typography>
                           </Grid>
                         </MenuItem>
@@ -364,125 +364,116 @@ function Withdraw() {
             {steps.map((label, index) => (
               <Step key={label}>
                 <StepLabel>{label}</StepLabel>
-                <StepContent>
-                  <div>
-                    {
-                      index === 0 && <>
-                        <StyledList>
-                          <StyledListItem>
-                            <ListItemText primary="Asset" />
-                            <ListItemSecondaryAction>
-                              {tokensList[asset].coin}
-                            </ListItemSecondaryAction>
-                          </StyledListItem>
+                <StyledStepContent>
+                  {
+                    index === 0 && <>
+                      <StyledList>
+                        <StyledListItem>
+                          <ListItemText primary="Asset" />
+                          <ListItemSecondaryAction>
+                            {tokensList[asset].name}
+                          </ListItemSecondaryAction>
+                        </StyledListItem>
 
-                          <StyledListItem>
-                            <ListItemText primary="Amount" />
-                            <ListItemSecondaryAction>
-                              {amount} {tokensList[asset].coin}
-                            </ListItemSecondaryAction>
-                          </StyledListItem>
+                        <StyledListItem>
+                          <ListItemText primary="Amount" />
+                          <ListItemSecondaryAction>
+                            {amount} {tokensList[asset].name}
+                          </ListItemSecondaryAction>
+                        </StyledListItem>
 
-                          <StyledListItem>
-                            <ListItemText primary={`${tokensList[asset].coin} Address`} />
-                            <ListItemSecondaryAction>
-                              {formatAddress(address)}
-                            </ListItemSecondaryAction>
-                          </StyledListItem>
+                        <StyledListItem>
+                          <ListItemText primary={`${tokensList[asset].coin} Address`} />
+                          <ListItemSecondaryAction>
+                            {formatAddress(address)}
+                          </ListItemSecondaryAction>
+                        </StyledListItem>
 
-                          <StyledListItem>
-                            <ListItemText primary="Destination" />
-                            <ListItemSecondaryAction>
-                              {formatAddress(account)}
-                            </ListItemSecondaryAction>
-                          </StyledListItem>
+                        <StyledListItem>
+                          <ListItemText primary="You will Receive" />
+                          <ListItemSecondaryAction>
+                            {tokensList[asset].coin}
+                          </ListItemSecondaryAction>
+                        </StyledListItem>
+                      </StyledList>
 
-                          <StyledListItem>
-                            <ListItemText primary="You will Receive" />
-                            <ListItemSecondaryAction>
-                              {tokensList[asset].name}
-                            </ListItemSecondaryAction>
-                          </StyledListItem>
-                        </StyledList>
-
-                        <div className="button-groups">
-                          <Button
-                            disabled={stepperPosition === 0}
-                            onClick={handleBack}
-                          >
-                            Back
+                      <div className="button-groups">
+                        <Button
+                          disabled={stepperPosition === 0}
+                          onClick={handleBack}
+                        >
+                          Back
                           </Button>
-                          <StyledButton
-                            fullWidth
-                            variant="contained"
-                            color="primary"
-                            onClick={startWithdraw}
-                          >
-                            Continue
+                        <StyledButton
+                          fullWidth
+                          variant="contained"
+                          color="primary"
+                          onClick={startWithdraw}
+                        >
+                          Continue
                           </StyledButton>
-                        </div>
-                      </>
-                    }
+                      </div>
+                    </>
+                  }
 
-                    {
-                      index === 1 && <>
-                        <div className="button-groups">
-                          <Button
-                            disabled={stepperPosition === 0}
-                            onClick={handleBack}
-                          >
-                            Back
+                  {
+                    index === 1 && <>
+                      <div className="button-groups">
+                        <Button
+                          disabled={stepperPosition === 0}
+                          onClick={handleBack}
+                        >
+                          Back
                           </Button>
-                          <StyledButton
-                            fullWidth
-                            variant="contained"
-                            color="primary"
-                            onClick={approveThirm}
-                          >
-                            {processingApproval && <CircularProgress size={24} />} Approve THIRM
+                        <StyledButton
+                          fullWidth
+                          variant="contained"
+                          color="primary"
+                          onClick={approveThirm}
+                        >
+                          {processingApproval && <CircularProgress size={24} />} Approve THIRM
                           </StyledButton>
-                        </div>
-                      </>
-                    }
+                      </div>
+                    </>
+                  }
 
-                    {
-                      index === 2 && <>
-                        <div className="button-groups">
-                          <Button
-                            disabled={stepperPosition === 0}
-                            onClick={handleBack}
-                          >
-                            Back
+                  {
+                    index === 2 && <>
+                      <div className="button-groups">
+                        <Button
+                          disabled={stepperPosition === 0}
+                          onClick={handleBack}
+                        >
+                          Back
                           </Button>
-                          <StyledButton
-                            fullWidth
-                            variant="contained"
-                            color="primary"
-                            onClick={approveCurrentToken}
-                          >
-                            {processingApproval && <CircularProgress size={24} />} Approve {tokensList[asset].name}
-                          </StyledButton>
-                        </div>
-                      </>
-                    }
-
-                    {
-                      index === 3 && <>
-                        <div className="button-groups">
-                          <Button
-                            disabled={stepperPosition === 0}
-                            onClick={handleBack}
-                          >
-                            Back
-                          </Button>
-                          <StyledButton fullWidth variant="contained" color="primary" onClick={withdrawCoin}>
-                            Withdraw
+                        <StyledButton
+                          fullWidth
+                          variant="contained"
+                          color="primary"
+                          onClick={approveCurrentToken}
+                        >
+                          {processingApproval && <CircularProgress size={24} />} Approve {tokensList[asset].name}
                         </StyledButton>
-                        </div>
-                      </>
-                    }
-                  </div>
-                </StepContent>
+                      </div>
+                    </>
+                  }
+
+                  {
+                    index === 3 && <>
+                      <div className="button-groups">
+                        <Button
+                          disabled={stepperPosition === 0}
+                          onClick={handleBack}
+                        >
+                          Back
+                          </Button>
+                        <StyledButton fullWidth variant="contained" color="primary" onClick={withdrawCoin}>
+                          Withdraw
+                        </StyledButton>
+                      </div>
+                    </>
+                  }
+                </StyledStepContent>
               </Step>
             ))}
           </Stepper>

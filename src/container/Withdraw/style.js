@@ -1,3 +1,4 @@
+import { StepContent } from '@material-ui/core';
 import styled from 'styled-components';
 
 export const WithdrawWrapper = styled.div`
@@ -16,4 +17,8 @@ export const WithdrawWrapper = styled.div`
       cursor: pointer;
     }
   }
+`;
+
+export const StyledStepContent = styled(StepContent)`
+  margin-right: -30px;
 `;
