@@ -8,7 +8,7 @@ function HeaderBar() {
     <FooterWrapper>
       <ul className="footer-menu">
         <li>
-          <a href="//thirm.com" target="_blank" rel="noreferrer nofollow">THIRM website</a>
+          <a href="//thirm.com" target="_blank" rel="noreferrer nofollow">Website</a>
         </li>
 
         <li>
