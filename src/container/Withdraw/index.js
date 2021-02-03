@@ -321,7 +321,7 @@ function Withdraw() {
                   >
                     {
                       tokensList.map((tkn, index) =>
-                        <MenuItem value={index}>
+                        <MenuItem value={index} key={index}>
                           <Grid container
                             direction="row"
                             justify="flex-start"
