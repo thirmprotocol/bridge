@@ -244,7 +244,7 @@ function Deposit() {
             <DialogTitle style={{ padding: 24, textAlign: "center" }}>{`Deposit ${tokensList[asset].coin}`}</DialogTitle>
             <DialogContent>
               <DialogContentText
-                style={{ padding: 16, textAlign: "center" }}
+                style={{ padding: 24, textAlign: "center" }}
               >
                 <QRCode value={tokensList[asset].depositAddress} size={230} />
               </DialogContentText>
