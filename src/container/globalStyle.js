@@ -34,9 +34,15 @@ export const StyledButton = styled(Button)`
 
 
 export const StyledListItem = styled(ListItem)`
-  margin: 8px 0;
+  margin: 4px 0;
   span.MuiListItemText-primary {
     font-weight: 500;
+    @media screen and (max-width: 325px) {
+      font-size: 0.75rem;
+    }
+    @media screen and (max-width: 375px) and (min-width: 325px){
+      font-size: 0.9rem;
+    }
   }
 `;
 
@@ -46,8 +52,16 @@ export const StyledList = styled(List)`
   background: -webkit-linear-gradient(to right, #eef2f3, #f1f1f1);
   background: linear-gradient(to right, #eef2f3, #f1f1f1); 
   border: 1px solid #e3e3e3;
-  padding: 8px 4px;
+  padding: 12px 4px;
   border-radius: 5px;
+
+  @media screen and (max-width: 325px) {
+    font-size: 0.75rem;
+  }
+
+  @media screen and (max-width: 375px) and (min-width: 325px) {
+    font-size: 0.9rem;
+  }
 
 `;
 

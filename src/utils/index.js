@@ -6,5 +6,5 @@ export const getThirmTokenContract = (library, account, address) => {
 }
 
 export const formatAddress = (address) => {
-  return `${address.substr(0, 5)}...${address.substr(address.length - 5, address.length)}`;
+  return `${address.substr(0, 8)}...${address.substr(address.length - 4, address.length)}`;
 }

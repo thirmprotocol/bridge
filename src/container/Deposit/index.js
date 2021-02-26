@@ -1,6 +1,7 @@
-import { Avatar, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, Grid, InputLabel, ListItemSecondaryAction, ListItemText, MenuItem, OutlinedInput, Select, Slide, Typography } from '@material-ui/core';
+import { Avatar, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, Grid, InputLabel, ListItemSecondaryAction, ListItemText, MenuItem, OutlinedInput, Select, Slide, Snackbar, Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import { KeyboardArrowLeft, TrendingFlat } from '@material-ui/icons';
+import Alert from '@material-ui/lab/Alert';
 import { useWeb3React } from '@web3-react/core';
 import React, { useEffect, useState } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
@@ -35,6 +36,12 @@ function Deposit() {
   const [coinAddressMapped, setCoinAddressMapped] = useState(false);
 
   const mappingContract = useMappingContract();
+
+  const [snackBar, setSnackBar] = useState({
+    status: false,
+    type: "success",
+    message: ""
+  });
 
   useEffect(() => {
     let stale = false;
@@ -85,6 +92,18 @@ function Deposit() {
 
   const closeDepositDialog = () => {
     setOpenDialog(false);
+  };
+
+  const handleSnackBarClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setSnackBar({
+      status: false,
+      type: "success",
+      message: ""
+    });
   };
 
   if (tokensList.length === 0) return null;
@@ -224,19 +243,22 @@ function Deposit() {
           >
             <DialogTitle style={{ padding: 24, textAlign: "center" }}>{`Deposit ${tokensList[asset].coin}`}</DialogTitle>
             <DialogContent>
-              <DialogContentText
-                style={{ padding: 24, textAlign: "center" }}
-              >
+              <div className="qr-wrapper">
                 <QRCode value={tokensList[asset].depositAddress} size={250} />
-
-              </DialogContentText>
+              </div>
               <DialogContentText
                 style={{ padding: 16, textAlign: "center", fontSize: 11 }}
-              >{tokensList[asset].depositAddress}</DialogContentText>
+              >{formatAddress(tokensList[asset].depositAddress)}</DialogContentText>
               <DialogContentText
                 style={{ textAlign: "center", fontSize: 11 }}
               >
-                <CopyToClipboard text={tokensList[asset].depositAddress}>
+                <CopyToClipboard text={tokensList[asset].depositAddress} onCopy={() => {
+                  setSnackBar({
+                    status: true,
+                    type: "info",
+                    message: `Deposit address copied.`
+                  });
+                }}>
                   <Button link>Copy Deposit Address</Button>
                 </CopyToClipboard>
               </DialogContentText>
@@ -251,6 +273,12 @@ function Deposit() {
           </Button>
             </DialogActions>
           </Dialog>
+
+          <Snackbar open={snackBar.status} autoHideDuration={6000} onClose={handleSnackBarClose} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
+            <Alert onClose={handleSnackBarClose} severity={snackBar.type}>
+              {snackBar.message}
+            </Alert>
+          </Snackbar>
         </>
       }
     </DepositWrapper>

@@ -300,7 +300,7 @@ function Withdraw() {
   }
 
   if (currentStep === 1) {
-    <WithdrawWrapper>
+    return <WithdrawWrapper>
       <GoBackButton color="primary" onClick={onBack}>
         <KeyboardArrowLeft /> Go Back
           </GoBackButton>

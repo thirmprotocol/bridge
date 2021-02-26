@@ -28,3 +28,7 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.MuiSelect-outlined.MuiSelect-outlined {
+  padding: 12px 10px;
+}
