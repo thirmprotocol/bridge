@@ -21,5 +21,8 @@ export const ConnectWrapper = styled.div`
 
   @media (max-width: 680px) {
     margin: 36px 8px;
+    .heading-info {
+      font-size: 40px;
+    }
   }
 `;
