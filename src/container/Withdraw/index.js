@@ -10,8 +10,7 @@ import React, { useEffect, useState } from 'react';
 import {
   useRecoilState
 } from 'recoil';
-import { useMainContract } from '../../hooks';
-import { useThirmContract } from './../../hooks/index';
+import { useControllerContract, useThirmContract } from './../../hooks/index';
 import config from './../../utils/config/index';
 import { formatAddress, getThirmTokenContract } from './../../utils/index';
 import { addressState, amountState, assetState } from './../../utils/recoilState';
@@ -47,7 +46,7 @@ function Withdraw() {
 
   const [processingApproval, setProcessingApproval] = useState(false);
 
-  const mainContract = useMainContract();
+  const controllerContract = useControllerContract();
 
   const thirmContract = useThirmContract();
 
@@ -87,7 +86,7 @@ function Withdraw() {
         if (stepperPosition === 1) {
           const thirmContract = getThirmTokenContract(library, account, config.THIRM_TOKEN_ADDRESS);
 
-          const allowance = await thirmContract.allowance(account, config.CONTRACT_ADDRESS);
+          const allowance = await thirmContract.allowance(account, config.CONTROLLER_CONTRACT_ADDRESS);
 
           const bal = await thirmContract.balanceOf(account);
           if (!allowance.eq(0) && allowance.gte(bal)) {
@@ -97,7 +96,7 @@ function Withdraw() {
         } else if (stepperPosition === 2) {
           const tokenContract = getThirmTokenContract(library, account, tokensList[asset].address);
 
-          const tokenAllowance = await tokenContract.allowance(account, config.CONTRACT_ADDRESS);
+          const tokenAllowance = await tokenContract.allowance(account, config.CONTROLLER_CONTRACT_ADDRESS);
 
           const bal = await tokenContract.balanceOf(account);
 
@@ -133,7 +132,7 @@ function Withdraw() {
 
     try {
       const tknAmount = parseEther(amount);
-      const withdrawed = await mainContract.registerWithdrawal(tokensList[asset].coin, address, tknAmount, {
+      const withdrawed = await controllerContract.registerWithdrawal(tokensList[asset].coin, address, tknAmount, {
         gasLimit: 500000
       });
 
@@ -180,15 +179,16 @@ function Withdraw() {
 
       const tokenContract = getThirmTokenContract(library, account, config.THIRM_TOKEN_ADDRESS);
 
-      const allowance = await thirmContract.allowance(account, config.CONTRACT_ADDRESS);
+      const allowance = await thirmContract.allowance(account, config.CONTROLLER_CONTRACT_ADDRESS);
 
       const bal = await thirmContract.balanceOf(account);
+
 
       if (!allowance.eq(0) && allowance.gte(bal)) {
         return;
       }
 
-      const approved = await tokenContract.approve(config.CONTRACT_ADDRESS, ALLOWANCE_LIMIT);
+      const approved = await tokenContract.approve(config.CONTROLLER_CONTRACT_ADDRESS, ALLOWANCE_LIMIT);
 
       setProcessingApproval(true);
       library.once(approved.hash, (done) => {
@@ -223,7 +223,7 @@ function Withdraw() {
 
       const tokenContract = getThirmTokenContract(library, account, tokensList[asset].address);
 
-      const tokenAllowance = await tokenContract.allowance(account, config.CONTRACT_ADDRESS);
+      const tokenAllowance = await tokenContract.allowance(account, config.CONTROLLER_CONTRACT_ADDRESS);
 
       const bal = await tokenContract.balanceOf(account);
 
@@ -232,7 +232,7 @@ function Withdraw() {
         return;
       }
 
-      const approved = await tokenContract.approve(config.CONTRACT_ADDRESS, ALLOWANCE_LIMIT);
+      const approved = await tokenContract.approve(config.CONTROLLER_CONTRACT_ADDRESS, ALLOWANCE_LIMIT);
 
       setProcessingApproval(true);
       library.once(approved.hash, (done) => {

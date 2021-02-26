@@ -8,7 +8,7 @@ import {
   useRecoilState
 } from 'recoil';
 import oopsImage from '../../assets/images/oops.png';
-import { useMainContract } from '../../hooks';
+import { useMappingContract } from '../../hooks';
 import { formatAddress } from '../../utils';
 import config from './../../utils/config/index';
 import { addressState, amountState, assetState } from './../../utils/recoilState';
@@ -35,7 +35,7 @@ function Deposit() {
 
   const [coinAddressMapped, setCoinAddressMapped] = useState(false);
 
-  const mainContract = useMainContract();
+  const mappingContract = useMappingContract();
 
   useEffect(() => {
     let stale = false;
@@ -62,7 +62,7 @@ function Deposit() {
 
     setCoinAddressMapped(false);
     try {
-      const mappedAddress = await mainContract.getAddressMap(address);
+      const mappedAddress = await mappingContract.addressMap(address);
       if (mappedAddress !== '0x0000000000000000000000000000000000000000') {
         setCoinAddressMapped(true);
       }
@@ -247,13 +247,13 @@ function Deposit() {
                 aria-labelledby="alert-dialog-slide-title"
                 aria-describedby="alert-dialog-slide-description"
               >
-                <DialogTitle id="alert-dialog-slide-title">{`Deposit ${tokensList[asset].coin}`}</DialogTitle>
+                <DialogTitle style={{ padding: 24, textAlign: "center" }}>{`Deposit ${tokensList[asset].coin}`}</DialogTitle>
                 <DialogContent>
-                  <DialogContentText id="alert-dialog-slide-description"
+                  <DialogContentText
                     style={{ padding: 24, textAlign: "center" }}
                   >
                     <QRCode value={tokensList[asset].depositAddress} size={250} />
-                    {formatAddress(tokensList[asset].depositAddress)}
+                    <span>{formatAddress(tokensList[asset].depositAddress)}</span>
                   </DialogContentText>
                 </DialogContent>
                 <DialogActions>

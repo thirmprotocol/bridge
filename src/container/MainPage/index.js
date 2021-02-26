@@ -40,7 +40,7 @@ function MainPage() {
         <MainAlert icon={false} severity="success" variant="outlined">
           ThirmVM is currently work in progress. Please don’t use assets you can’t afford to lose.
       </MainAlert>
-        <MainCard elevation={0}>
+        <MainCard elevation={5}>
           <MainAppBar position="static" elevation={0}>
             <Tabs
               value={value}

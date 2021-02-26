@@ -5,7 +5,8 @@ import {
   UserRejectedRequestError as UserRejectedRequestErrorInjected
 } from "@web3-react/injected-connector";
 import { useEffect, useMemo, useState } from "react";
-import abi from '../utils/abis/abi.json';
+import controllerAbi from '../utils/abis/controller.json';
+import mappingAbi from '../utils/abis/mapping.json';
 import ttokensAbi from '../utils/abis/ttokens.json';
 import config from '../utils/config';
 import { injected } from "./connectors";
@@ -114,12 +115,25 @@ export function getErrorMessage(error) {
   * All the contracts hook
   ****************************************************************
 */
-export function useMainContract() {
+export function useMappingContract() {
   const { library, account } = useWeb3React();
 
   return useMemo(() => {
     try {
-      return new Contract(config.CONTRACT_ADDRESS, abi, library.getSigner(account).connectUnchecked());
+      return new Contract(config.MAPPING_CONTRACT_ADDRESS, mappingAbi, library.getSigner(account).connectUnchecked());
+    } catch (error) {
+      console.error('Failed to get contract', error)
+      return null
+    }
+  }, [library, account]);
+}
+
+export function useControllerContract() {
+  const { library, account } = useWeb3React();
+
+  return useMemo(() => {
+    try {
+      return new Contract(config.CONTROLLER_CONTRACT_ADDRESS, controllerAbi, library.getSigner(account).connectUnchecked());
     } catch (error) {
       console.error('Failed to get contract', error)
       return null
