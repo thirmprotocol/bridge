@@ -13,8 +13,6 @@ export const DepositWrapper = styled.div`
   position: relative;
   min-height: 450px;
   padding: 8px 0;
-  display: flex;
-  flex-direction: column;
   .next-button {
     position: absolute;
     bottom: 0;
