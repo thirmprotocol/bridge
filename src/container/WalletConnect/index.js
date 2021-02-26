@@ -49,9 +49,7 @@ const ConnectWallet = (props) => {
           })}
         <div className="error-message">
           {!!error && <Alert severity="error">
-            {
-              getErrorMessage(error)
-            }
+            <div dangerouslySetInnerHTML={{ __html: getErrorMessage(error) }} />
           </Alert>}
         </div>
       </ConnectWrapper>

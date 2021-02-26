@@ -99,7 +99,7 @@ export function getErrorMessage(error) {
   if (error instanceof NoEthereumProviderError) {
     return "No Ethereum browser extension detected, install MetaMask on desktop or visit from a dApp browser on mobile.";
   } else if (error instanceof UnsupportedChainIdError) {
-    return `You're connected to an unsupported network. Change the network to Mainnet.`;
+    return `You're connected to an unsupported network. Change the network to Binance Smart Chain. To connect with Binance Smart Chain from Metamask, Please follow the steps from <a target="_blank" href="https://academy.binance.com/en/articles/connecting-metamask-to-binance-smart-chain">here</a>.`;
   } else if (
     error instanceof UserRejectedRequestErrorInjected
   ) {

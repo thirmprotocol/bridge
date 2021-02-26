@@ -51,6 +51,9 @@ export const ConnectionCard = styled(Card)`
      p {
        color: #0652DD;
      }
+     b {
+       font-weight: 600;
+     }
    }
  }
 `;
