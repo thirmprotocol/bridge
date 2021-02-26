@@ -10,7 +10,7 @@ import React, { useEffect, useState } from 'react';
 import {
   useRecoilState
 } from 'recoil';
-import { useControllerContract, useThirmContract } from './../../hooks/index';
+import { useControllerContract } from './../../hooks/index';
 import config from './../../utils/config/index';
 import { formatAddress, getThirmTokenContract } from './../../utils/index';
 import { addressState, amountState, assetState } from './../../utils/recoilState';
@@ -18,7 +18,7 @@ import { GoBackButton, StyledButton, StyledInputArea, StyledList, StyledListItem
 import { StyledStepper, WithdrawWrapper } from './style';
 
 function getSteps() {
-  return ['Check withdraw information', 'Approve THIRM', 'Approve token', 'Finish Withdraw'];
+  return ['Check withdraw information', 'Approve Token', 'Finish Withdraw'];
 }
 
 const ALLOWANCE_LIMIT = ethers.BigNumber.from("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
@@ -47,8 +47,6 @@ function Withdraw() {
   const [processingApproval, setProcessingApproval] = useState(false);
 
   const controllerContract = useControllerContract();
-
-  const thirmContract = useThirmContract();
 
   const [stepperPosition, setStepperPosition] = useState(0);
 
@@ -84,16 +82,6 @@ function Withdraw() {
       try {
 
         if (stepperPosition === 1) {
-          const thirmContract = getThirmTokenContract(library, account, config.THIRM_TOKEN_ADDRESS);
-
-          const allowance = await thirmContract.allowance(account, config.CONTROLLER_CONTRACT_ADDRESS);
-
-          const bal = await thirmContract.balanceOf(account);
-          if (!allowance.eq(0) && allowance.gte(bal)) {
-            setStepperPosition(2);
-          }
-
-        } else if (stepperPosition === 2) {
           const tokenContract = getThirmTokenContract(library, account, tokensList[asset].address);
 
           const tokenAllowance = await tokenContract.allowance(account, config.CONTROLLER_CONTRACT_ADDRESS);
@@ -101,7 +89,7 @@ function Withdraw() {
           const bal = await tokenContract.balanceOf(account);
 
           if (!tokenAllowance.eq(0) && tokenAllowance.gte(bal)) {
-            setStepperPosition(3);
+            setStepperPosition(2);
           }
         }
 
@@ -173,50 +161,6 @@ function Withdraw() {
     setStepperPosition((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const approveThirm = async () => {
-
-    try {
-
-      const tokenContract = getThirmTokenContract(library, account, config.THIRM_TOKEN_ADDRESS);
-
-      const allowance = await thirmContract.allowance(account, config.CONTROLLER_CONTRACT_ADDRESS);
-
-      const bal = await thirmContract.balanceOf(account);
-
-
-      if (!allowance.eq(0) && allowance.gte(bal)) {
-        return;
-      }
-
-      const approved = await tokenContract.approve(config.CONTROLLER_CONTRACT_ADDRESS, ALLOWANCE_LIMIT);
-
-      setProcessingApproval(true);
-      library.once(approved.hash, (done) => {
-
-        if (done.status === 1) {
-          setStepperPosition(2);
-          setSnackBar({
-            status: true,
-            type: "success",
-            message: `THIRM approved`
-          });
-        } else {
-          setSnackBar({
-            status: true,
-            type: "error",
-            message: `THIRM approval failed.`
-          });
-        }
-
-        setProcessingApproval(false);
-      });
-
-    } catch (e) {
-      console.log(e);
-    }
-
-  }
-
   const approveCurrentToken = async () => {
 
     try {
@@ -238,7 +182,7 @@ function Withdraw() {
       library.once(approved.hash, (done) => {
 
         if (done.status === 1) {
-          setStepperPosition(3);
+          setStepperPosition(2);
           setSnackBar({
             status: true,
             type: "success",
@@ -431,27 +375,6 @@ function Withdraw() {
                           fullWidth
                           variant="contained"
                           color="primary"
-                          onClick={approveThirm}
-                        >
-                          {processingApproval && <CircularProgress size={24} />} Approve THIRM
-                          </StyledButton>
-                      </div>
-                    </>
-                  }
-
-                  {
-                    index === 2 && <>
-                      <div className="button-groups">
-                        <Button
-                          disabled={stepperPosition === 0}
-                          onClick={handleBack}
-                        >
-                          Back
-                          </Button>
-                        <StyledButton
-                          fullWidth
-                          variant="contained"
-                          color="primary"
                           onClick={approveCurrentToken}
                         >
                           {processingApproval && <CircularProgress size={24} />} Approve {tokensList[asset].name}
@@ -461,7 +384,7 @@ function Withdraw() {
                   }
 
                   {
-                    index === 3 && <>
+                    index === 2 && <>
                       <div className="button-groups">
                         <Button
                           disabled={stepperPosition === 0}
