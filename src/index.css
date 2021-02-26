@@ -14,7 +14,15 @@ body {
   -moz-osx-font-smoothing: grayscale;
   font-size: 15px;
 
-  background-image: radial-gradient( circle farthest-corner at 10% 20%,  rgba(167,220,225,1) 0.1%, rgba(239,249,251,0.63) 90.1% );
+  /* background-image: radial-gradient( circle farthest-corner at 10% 20%,  rgba(167,220,225,1) 0.1%, rgba(239,249,251,0.63) 90.1% ); */
+
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+
+  background-image: url("./assets/images/bg.jpg");
+
+
   }
 
 code {
