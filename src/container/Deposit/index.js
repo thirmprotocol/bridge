@@ -89,49 +89,110 @@ function Deposit() {
 
   if (tokensList.length === 0) return null;
 
-  return (
-    <DepositWrapper>
-      {
-        currentStep === 0 && <>
-          <StyledInputArea>
-            <FormControl variant="outlined" fullWidth >
-              <InputLabel htmlFor="outlined-adornment-address">{tokensList[asset].coin} Address</InputLabel>
-              <OutlinedInput
-                value={address}
-                onChange={handleChange('address')}
-                id="outlined-adornment-address"
-                labelWidth={110}
-              />
+  if (currentStep === 0) {
+    return <DepositWrapper>
+      <StyledInputArea>
+        <FormControl variant="outlined" fullWidth >
+          <InputLabel htmlFor="outlined-adornment-address">{tokensList[asset].coin} Address</InputLabel>
+          <OutlinedInput
+            value={address}
+            onChange={handleChange('address')}
+            id="outlined-adornment-address"
+            labelWidth={110}
+          />
+        </FormControl>
+      </StyledInputArea>
+      <StyledList>
+        <StyledListItem>
+          <ListItemText primary="Asset" />
+          <ListItemSecondaryAction>
+            <FormControl variant="outlined">
+              <Select
+                value={asset}
+                onChange={handleChange('asset')}
+              >
+                {
+                  tokensList.map((tkn, index) =>
+                    <MenuItem value={index} key={index}>
+                      <Grid container
+                        direction="row"
+                        justify="flex-start"
+                        alignItems="center">
+                        <Avatar alt={tkn.name} src={tkn.image} style={{
+                          width: 24, height: 24
+                        }} />
+                        <Typography style={{ marginLeft: 16, marginRight: 16 }}>
+                          {tkn.coin}
+                        </Typography>
+                      </Grid>
+                    </MenuItem>
+                  )
+                }
+              </Select>
             </FormControl>
-          </StyledInputArea>
+          </ListItemSecondaryAction>
+        </StyledListItem>
+
+        <StyledListItem>
+          <ListItemText primary="Destination" />
+          <ListItemSecondaryAction>
+            {formatAddress(account)}
+          </ListItemSecondaryAction>
+        </StyledListItem>
+
+        <StyledListItem>
+          <ListItemText primary="You will Receive" />
+          <ListItemSecondaryAction>
+            <p>{tokensList[asset].name}</p>
+          </ListItemSecondaryAction>
+        </StyledListItem>
+
+      </StyledList>
+
+      <StyledButton className="next-button" fullWidth variant="contained" color="primary" onClick={onNext} disabled={!address}>
+        <span>Next</span>
+        <TrendingFlat />
+      </StyledButton>
+    </DepositWrapper>
+  }
+
+  if (currentStep === 1) {
+    return <DepositWrapper>
+      {
+        !coinAddressMapped && <Grid container
+          direction="column"
+          justify="center"
+          alignItems="flex-start">
+          <GoBackButton color="primary" onClick={onBack}>
+            <KeyboardArrowLeft /> Go Back
+      </GoBackButton>
+          <img className="deposit-error-image" src={oopsImage} alt="oops" />
+          <p className="oops-message">
+            Your address is not mapped yet for deposit.<br />
+          Please email us at <a href="mailto:developer@thirm.com">developer@thirm.com</a> for the mapping.
+        </p>
+        </Grid>
+      }
+
+      {
+        coinAddressMapped && <>
+          <GoBackButton color="primary" onClick={onBack}>
+            <KeyboardArrowLeft /> Go Back
+      </GoBackButton>
+
           <StyledList>
+
             <StyledListItem>
               <ListItemText primary="Asset" />
               <ListItemSecondaryAction>
-                <FormControl variant="outlined">
-                  <Select
-                    value={asset}
-                    onChange={handleChange('asset')}
-                  >
-                    {
-                      tokensList.map((tkn, index) =>
-                        <MenuItem value={index} key={index}>
-                          <Grid container
-                            direction="row"
-                            justify="flex-start"
-                            alignItems="center">
-                            <Avatar alt={tkn.name} src={tkn.image} style={{
-                              width: 24, height: 24
-                            }} />
-                            <Typography style={{ marginLeft: 16, marginRight: 16 }}>
-                              {tkn.coin}
-                            </Typography>
-                          </Grid>
-                        </MenuItem>
-                      )
-                    }
-                  </Select>
-                </FormControl>
+                {tokensList[asset].coin}
+              </ListItemSecondaryAction>
+            </StyledListItem>
+
+            <StyledListItem>
+              <ListItemText primary={`${tokensList[asset].coin} Address`} />
+              <ListItemSecondaryAction>
+                {formatAddress(address)}
               </ListItemSecondaryAction>
             </StyledListItem>
 
@@ -148,117 +209,54 @@ function Deposit() {
                 <p>{tokensList[asset].name}</p>
               </ListItemSecondaryAction>
             </StyledListItem>
-
           </StyledList>
+          <StyledButton className="next-button" fullWidth variant="contained" color="primary" onClick={openDepositDialog}>
+            Deposit
+      </StyledButton>
 
-          <StyledButton className="next-button" fullWidth variant="contained" color="primary" onClick={onNext} disabled={!address}>
-            <span>Next</span>
-            <TrendingFlat />
-          </StyledButton>
-        </>
-      }
-
-      {
-        currentStep === 1 && <>
-          {
-            !coinAddressMapped && <Grid container
-              direction="column"
-              justify="center"
-              alignItems="flex-start">
-              <GoBackButton color="primary" onClick={onBack}>
-                <KeyboardArrowLeft /> Go Back
-            </GoBackButton>
-              <img className="deposit-error-image" src={oopsImage} alt="oops" />
-              <p className="oops-message">
-                Your address is not mapped yet for deposit.<br />
-                Please email us at <a href="mailto:developer@thirm.com">developer@thirm.com</a> for the mapping.
-              </p>
-            </Grid>
-          }
-
-          {
-            coinAddressMapped && <>
-              <GoBackButton color="primary" onClick={onBack}>
-                <KeyboardArrowLeft /> Go Back
-            </GoBackButton>
-
-              <StyledList>
-
-                <StyledListItem>
-                  <ListItemText primary="Asset" />
-                  <ListItemSecondaryAction>
-                    {tokensList[asset].coin}
-                  </ListItemSecondaryAction>
-                </StyledListItem>
-
-                <StyledListItem>
-                  <ListItemText primary={`${tokensList[asset].coin} Address`} />
-                  <ListItemSecondaryAction>
-                    {formatAddress(address)}
-                  </ListItemSecondaryAction>
-                </StyledListItem>
-
-                <StyledListItem>
-                  <ListItemText primary="Destination" />
-                  <ListItemSecondaryAction>
-                    {formatAddress(account)}
-                  </ListItemSecondaryAction>
-                </StyledListItem>
-
-                <StyledListItem>
-                  <ListItemText primary="You will Receive" />
-                  <ListItemSecondaryAction>
-                    <p>{tokensList[asset].name}</p>
-                  </ListItemSecondaryAction>
-                </StyledListItem>
-              </StyledList>
-              <StyledButton fullWidth variant="contained" color="primary" onClick={openDepositDialog}>
-                Deposit
-            </StyledButton>
-
-              <Dialog
-                open={openDialog}
-                TransitionComponent={Transition}
-                keepMounted
-                onClose={closeDepositDialog}
-                aria-labelledby="alert-dialog-slide-title"
-                aria-describedby="alert-dialog-slide-description"
+          <Dialog
+            open={openDialog}
+            TransitionComponent={Transition}
+            keepMounted
+            onClose={closeDepositDialog}
+            aria-labelledby="alert-dialog-slide-title"
+            aria-describedby="alert-dialog-slide-description"
+          >
+            <DialogTitle style={{ padding: 24, textAlign: "center" }}>{`Deposit ${tokensList[asset].coin}`}</DialogTitle>
+            <DialogContent>
+              <DialogContentText
+                style={{ padding: 24, textAlign: "center" }}
               >
-                <DialogTitle style={{ padding: 24, textAlign: "center" }}>{`Deposit ${tokensList[asset].coin}`}</DialogTitle>
-                <DialogContent>
-                  <DialogContentText
-                    style={{ padding: 24, textAlign: "center" }}
-                  >
-                    <QRCode value={tokensList[asset].depositAddress} size={250} />
+                <QRCode value={tokensList[asset].depositAddress} size={250} />
 
-                  </DialogContentText>
-                  <DialogContentText
-                    style={{ padding: 16, textAlign: "center", fontSize: 11 }}
-                  >{tokensList[asset].depositAddress}</DialogContentText>
-                  <DialogContentText
-                    style={{ textAlign: "center", fontSize: 11 }}
-                  >
-                    <CopyToClipboard text={tokensList[asset].depositAddress}>
-                      <Button link>Copy Deposit Address</Button>
-                    </CopyToClipboard>
-                  </DialogContentText>
+              </DialogContentText>
+              <DialogContentText
+                style={{ padding: 16, textAlign: "center", fontSize: 11 }}
+              >{tokensList[asset].depositAddress}</DialogContentText>
+              <DialogContentText
+                style={{ textAlign: "center", fontSize: 11 }}
+              >
+                <CopyToClipboard text={tokensList[asset].depositAddress}>
+                  <Button link>Copy Deposit Address</Button>
+                </CopyToClipboard>
+              </DialogContentText>
 
-                </DialogContent>
-                <DialogActions>
-                  <Button onClick={closeDepositDialog} color="primary">
-                    Dismiss
-                </Button>
-                  <Button onClick={closeDepositDialog} color="primary">
-                    Done
-                </Button>
-                </DialogActions>
-              </Dialog>
-            </>
-          }
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={closeDepositDialog} color="primary">
+                Dismiss
+          </Button>
+              <Button onClick={closeDepositDialog} color="primary">
+                Done
+          </Button>
+            </DialogActions>
+          </Dialog>
         </>
       }
     </DepositWrapper>
-  );
+  }
+
+  return null
 }
 
 export default Deposit;

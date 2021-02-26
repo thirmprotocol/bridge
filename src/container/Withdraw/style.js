@@ -19,11 +19,15 @@ export const WithdrawWrapper = styled.div`
   }
 
   position: relative;
-  min-height: 460px;
+  min-height: 450px;
+  padding: 8px 0;
+  display: flex;
+  flex-direction: column;
   .next-button {
     position: absolute;
     bottom: 0;
     width: 100%;
+    margin: 0;
   }
 `;
 
