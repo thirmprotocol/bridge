@@ -18,7 +18,7 @@ export const FooterWrapper = styled.div`
     }
   }
 
-  @media (max-width: 600px) {
+  @media (max-width: 680px) {
     flex-direction: column;
   }
   

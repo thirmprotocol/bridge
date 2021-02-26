@@ -26,6 +26,7 @@ export const HeaderWrapper = styled.div`
   align-items: center;
   justify-content: space-between;
   margin-bottom: 36px;
+  height: 80px;
   .account-address {
     margin-left: 8px;
   }

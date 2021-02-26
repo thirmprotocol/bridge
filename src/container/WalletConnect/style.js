@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 
 export const ConnectWrapper = styled.div`
-  margin: 180px 8px;
+  margin: 180px 36px;
   text-align: center;
   .heading-info {
     font-size: 45px;
@@ -17,5 +17,9 @@ export const ConnectWrapper = styled.div`
   }
   .error-message {
     margin: 36px 0;
+  }
+
+  @media (max-width: 680px) {
+    margin: 36px 8px;
   }
 `;
