@@ -13,9 +13,11 @@ export const MainCard = styled(Card)`
 `
 
 export const MainAppBar = styled(AppBar)`
-  background: #8E2DE2;
-  background: -webkit-linear-gradient(to right, #4A00E0, #8E2DE2);
-  background: linear-gradient(to right, #4A00E0, #8E2DE2);
+ background-image: linear-gradient(to right, #0652DD 30%, #d43f8d 100%);
+  &.change {
+    background-image: linear-gradient(to left, #0652DD 30%, #d43f8d 100%);
+  }
+
   .MuiTabs-flexContainer {
     height: 60px;
   }

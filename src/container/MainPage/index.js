@@ -41,7 +41,7 @@ function MainPage() {
           ThirmVM is currently work in progress. Please don’t use assets you can’t afford to lose.
       </MainAlert>
         <MainCard elevation={5}>
-          <MainAppBar position="static" elevation={0}>
+          <MainAppBar position="static" elevation={0} className={value === 1 && "change"}>
             <Tabs
               value={value}
               indicatorColor="primary"

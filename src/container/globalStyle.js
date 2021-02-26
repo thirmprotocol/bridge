@@ -5,6 +5,25 @@ import styled from 'styled-components';
 export const StyledButton = styled(Button)`
   height: 60px;
   margin: 16px 0;
+  background-image: linear-gradient(to right, #0652DD 0%, #512DA8  51%, #673AB7  100%);
+  text-align: center;
+  text-transform: uppercase;
+  transition: 0.5s;
+  background-size: 200% auto;
+  color: white;            
+  box-shadow: 0 0 20px #eee;
+  border-radius: 6px;
+  &:hover {
+    background-position: right center;
+    color: #fff;
+    text-decoration: none;
+  }
+
+  &.Mui-disabled {
+    background-image: none;
+    background-color: #67e6d2;
+  }
+
   span {
     margin-right: 4px;
   }
@@ -13,8 +32,9 @@ export const StyledButton = styled(Button)`
   }
 `;
 
+
 export const StyledListItem = styled(ListItem)`
-  margin: 12px 0;
+  margin: 8px 0;
   span.MuiListItemText-primary {
     font-weight: 500;
   }

@@ -253,8 +253,11 @@ function Deposit() {
                     style={{ padding: 24, textAlign: "center" }}
                   >
                     <QRCode value={tokensList[asset].depositAddress} size={250} />
-                    <span>{formatAddress(tokensList[asset].depositAddress)}</span>
+
                   </DialogContentText>
+                  <DialogContentText
+                    style={{ padding: 24, textAlign: "center" }}
+                  >{formatAddress(tokensList[asset].depositAddress)}</DialogContentText>
                 </DialogContent>
                 <DialogActions>
                   <Button onClick={closeDepositDialog} color="primary">

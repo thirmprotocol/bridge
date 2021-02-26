@@ -7,6 +7,7 @@ import {
 } from 'recoil';
 import MainContent from './container/index';
 
+
 function getLibrary(provider) {
   const library = new Web3Provider(provider);
   library.pollingInterval = 12000;
@@ -14,6 +15,10 @@ function getLibrary(provider) {
 }
 
 const theme = createMuiTheme({
+  typography: {
+    fontFamily: 'Kanit, Oxygen, Arial',
+    fontSize: 15
+  },
   palette: {
     primary: {
       main: "#0652DD",
