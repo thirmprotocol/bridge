@@ -9,7 +9,6 @@ export const MainWrapper = styled.div`
 
 export const MainCard = styled(Card)`
   width: 100%;
-  min-height: 600px;
 `
 
 export const MainAppBar = styled(AppBar)`

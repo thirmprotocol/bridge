@@ -17,6 +17,14 @@ export const WithdrawWrapper = styled.div`
       cursor: pointer;
     }
   }
+
+  position: relative;
+  min-height: 460px;
+  .next-button {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+  }
 `;
 
 export const StyledStepper = styled(Stepper)`

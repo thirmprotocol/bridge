@@ -10,4 +10,11 @@ export const DepositWrapper = styled.div`
     margin: 36px 8px;
     text-align: center;
   }
+  position: relative;
+  min-height: 460px;
+  .next-button {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+  }
 `;

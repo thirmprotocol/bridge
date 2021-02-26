@@ -17,6 +17,7 @@
     "@web3-react/injected-connector": "^6.0.7",
     "ethers": "^5.0.26",
     "react": "^17.0.1",
+    "react-copy-to-clipboard": "^5.0.3",
     "react-dom": "^17.0.1",
     "react-qr-code": "^1.0.5",
     "react-router-dom": "^5.2.0",

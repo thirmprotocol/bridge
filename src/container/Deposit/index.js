@@ -1,8 +1,9 @@
-import { Avatar, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, Grid, InputAdornment, InputLabel, ListItemSecondaryAction, ListItemText, MenuItem, OutlinedInput, Select, Slide, Typography } from '@material-ui/core';
+import { Avatar, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, Grid, InputLabel, ListItemSecondaryAction, ListItemText, MenuItem, OutlinedInput, Select, Slide, Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import { KeyboardArrowLeft, TrendingFlat } from '@material-ui/icons';
 import { useWeb3React } from '@web3-react/core';
 import React, { useEffect, useState } from 'react';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 import QRCode from 'react-qr-code';
 import {
   useRecoilState
@@ -11,7 +12,7 @@ import oopsImage from '../../assets/images/oops.png';
 import { useMappingContract } from '../../hooks';
 import { formatAddress } from '../../utils';
 import config from './../../utils/config/index';
-import { addressState, amountState, assetState } from './../../utils/recoilState';
+import { addressState, assetState } from './../../utils/recoilState';
 import { GoBackButton, StyledButton, StyledInputArea, StyledList, StyledListItem } from './../globalStyle';
 import { DepositWrapper } from './style';
 
@@ -20,8 +21,6 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 function Deposit() {
-
-  const [amount, setAmount] = useRecoilState(amountState);
 
   const [address, setAddress] = useRecoilState(addressState);
 
@@ -52,13 +51,12 @@ function Deposit() {
   }, []);
 
   const handleChange = (prop) => (event) => {
-    if (prop === "amount") setAmount(event.target.value);
     if (prop === "address") setAddress(event.target.value);
     if (prop === "asset") setAsset(event.target.value);
   };
 
   const onNext = async () => {
-    if (!amount || !address || amount <= 0) return;
+    if (!address) return;
 
     setCoinAddressMapped(false);
     try {
@@ -95,20 +93,6 @@ function Deposit() {
     <DepositWrapper>
       {
         currentStep === 0 && <>
-          <StyledInputArea>
-            <FormControl variant="outlined" fullWidth>
-              <InputLabel htmlFor="outlined-adornment-amount">Amount</InputLabel>
-              <OutlinedInput
-                value={amount}
-                onChange={handleChange('amount')}
-                endAdornment={<InputAdornment position="end">{tokensList[asset].coin}</InputAdornment>}
-                id="outlined-adornment-amount"
-                labelWidth={60}
-                type="number"
-              />
-            </FormControl>
-          </StyledInputArea>
-
           <StyledInputArea>
             <FormControl variant="outlined" fullWidth >
               <InputLabel htmlFor="outlined-adornment-address">{tokensList[asset].coin} Address</InputLabel>
@@ -167,7 +151,7 @@ function Deposit() {
 
           </StyledList>
 
-          <StyledButton fullWidth variant="contained" color="primary" onClick={onNext} disabled={!amount || !address}>
+          <StyledButton className="next-button" fullWidth variant="contained" color="primary" onClick={onNext} disabled={!address}>
             <span>Next</span>
             <TrendingFlat />
           </StyledButton>
@@ -204,13 +188,6 @@ function Deposit() {
                   <ListItemText primary="Asset" />
                   <ListItemSecondaryAction>
                     {tokensList[asset].coin}
-                  </ListItemSecondaryAction>
-                </StyledListItem>
-
-                <StyledListItem>
-                  <ListItemText primary="Amount" />
-                  <ListItemSecondaryAction>
-                    {amount} {tokensList[asset].coin}
                   </ListItemSecondaryAction>
                 </StyledListItem>
 
@@ -256,8 +233,16 @@ function Deposit() {
 
                   </DialogContentText>
                   <DialogContentText
-                    style={{ padding: 24, textAlign: "center" }}
-                  >{formatAddress(tokensList[asset].depositAddress)}</DialogContentText>
+                    style={{ padding: 16, textAlign: "center", fontSize: 11 }}
+                  >{tokensList[asset].depositAddress}</DialogContentText>
+                  <DialogContentText
+                    style={{ textAlign: "center", fontSize: 11 }}
+                  >
+                    <CopyToClipboard text={tokensList[asset].depositAddress}>
+                      <Button link>Copy Deposit Address</Button>
+                    </CopyToClipboard>
+                  </DialogContentText>
+
                 </DialogContent>
                 <DialogActions>
                   <Button onClick={closeDepositDialog} color="primary">
