@@ -21,6 +21,11 @@ export const MainAppBar = styled(AppBar)`
   .MuiTabs-flexContainer {
     height: 60px;
   }
+
+  .MuiTab-wrapper {
+    letter-spacing: 0.06em;
+    font-weight: 500;
+  }
 `;
 
 export const MainAlert = styled(Alert)`
