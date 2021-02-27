@@ -445,7 +445,7 @@ function Deposit() {
               value={tokensList[asset].depositAddress}
               id="outlined-adornment-address"
               fullWidth
-              style={{ width: 320 }}
+              style={{ width: 300 }}
             />
           </div>
 
