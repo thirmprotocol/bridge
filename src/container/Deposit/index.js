@@ -251,7 +251,7 @@ function Deposit() {
     }
   };
 
-  if (tokensList.length === 0) return null;
+  if (tokensList.length === 0) return <DepositWrapper></DepositWrapper>;
 
   if (currentStep === 0) {
     return <DepositWrapper>
@@ -482,7 +482,7 @@ function Deposit() {
     </DepositWrapper>
   }
 
-  return null
+  return (<DepositWrapper></DepositWrapper>);
 }
 
 export default Deposit;

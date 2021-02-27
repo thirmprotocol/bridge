@@ -217,7 +217,7 @@ function Withdraw() {
   };
 
 
-  if (tokensList.length === 0) return null;
+  if (tokensList.length === 0) return (<WithdrawWrapper></WithdrawWrapper>);
 
   if (currentStep === 0) {
     return <WithdrawWrapper>
@@ -401,7 +401,7 @@ function Withdraw() {
     </WithdrawWrapper>
   }
 
-  return null;
+  return (<WithdrawWrapper></WithdrawWrapper>);
 }
 
 export default Withdraw;
