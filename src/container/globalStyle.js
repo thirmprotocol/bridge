@@ -96,9 +96,10 @@ export const MainContentWrapper = styled.div`
     font-weight: 600;
     letter-spacing: 0.02em;
     text-transform: uppercase;
-    margin: 16px auto 0 auto;
-    padding-bottom: 4px;
-    border-bottom: 4px dashed #bdbdbd;
+    display: table;
+    margin: 24px auto 0 auto;
+    padding-bottom: 6px;
+    border-bottom: 4px dashed ${bridgeTheme.primaryColor};
   }
 
   .balance-info {

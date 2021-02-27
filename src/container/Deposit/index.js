@@ -337,10 +337,6 @@ function Deposit() {
           <p><span>{thirmBal} THIRM</span></p>
         </div>
       </div>
-
-      <div className="balance-info">
-        <p>You have <span>{thirmBal} THIRM</span></p>
-      </div>
       <StyledStepper activeStep={stepperPosition} orientation="vertical">
         {steps.map((label, index) => (
           <Step key={label}>

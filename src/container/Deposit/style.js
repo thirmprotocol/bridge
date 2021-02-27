@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 export const DepositWrapper = styled.div`
   position: relative;
-  min-height: 460px;
+  min-height: 470px;
   padding: 0;
   .next-button {
     position: absolute;

@@ -8,7 +8,7 @@ export const WithdrawWrapper = styled.div`
     }
   }
   position: relative;
-  min-height: 460px;
+  min-height: 470px;
   padding: 0;
   .next-button {
     position: absolute;
