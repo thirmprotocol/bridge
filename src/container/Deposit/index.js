@@ -40,6 +40,8 @@ function Deposit() {
 
   const [thirmBal, setThirmBal] = useState("0.00000000");
 
+  const [burnBal, setBurnBal] = useState("0");
+
   const [coinAddressMapped, setCoinAddressMapped] = useState(false);
 
   const steps = ['Approve THIRM', 'Finish Mapping'];
@@ -71,6 +73,12 @@ function Deposit() {
 
       if (!stale) {
         setThirmBal(tokenBal);
+      }
+
+      const toBurnEth = formatEther(await mappingContract.BURN_AMOUNT());
+
+      if (!stale) {
+        setBurnBal(toBurnEth);
       }
     };
     getTokensList();
@@ -188,8 +196,7 @@ function Deposit() {
         return;
       }
 
-      const toBurnEth = 10 * formatEther(await mappingContract.BURN_AMOUNT());
-      const toBurnAllowance = parseEther(toBurnEth.toString());
+      const toBurnAllowance = parseEther((burnBal * 10).toString());
 
       const approved = await tokenContract.approve(config.MAPPING_CONTRACT_ADDRESS, toBurnAllowance);
 
@@ -258,7 +265,7 @@ function Deposit() {
       <div className="top-bar">
         <div></div>
         <div className="balance-info">
-          <p><span>{thirmBal} THIRM</span></p>
+          <p>{thirmBal} THIRM</p>
         </div>
       </div>
       <StyledInputArea>
@@ -334,7 +341,7 @@ function Deposit() {
           <KeyboardArrowLeft /> Go Back
           </GoBackButton>
         <div className="balance-info">
-          <p><span>{thirmBal} THIRM</span></p>
+          <p>{thirmBal} THIRM</p>
         </div>
       </div>
       <StyledStepper activeStep={stepperPosition} orientation="vertical">
@@ -383,6 +390,8 @@ function Deposit() {
           </Step>
         ))}
       </StyledStepper>
+      <Alert severity="info">{burnBal} THIRM will be burned for the address mapping. It is a one time process to prevent spam.</Alert>
+
       <Snackbar open={snackBar.status} autoHideDuration={6000} onClose={handleSnackBarClose} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
         <Alert onClose={handleSnackBarClose} severity={snackBar.type}>
           {snackBar.message}
@@ -398,7 +407,7 @@ function Deposit() {
           <KeyboardArrowLeft /> Go Back
           </GoBackButton>
         <div className="balance-info">
-          <p><span>{thirmBal} THIRM</span></p>
+          <p>{thirmBal} THIRM</p>
         </div>
       </div>
       <h5 className="list-title">Your Deposit Summary</h5>

@@ -106,9 +106,10 @@ export const MainContentWrapper = styled.div`
     text-align: center;
     margin-bottom: 16px;
     color: #666;
-    p span {
+    p {
       color: ${bridgeTheme.secondaryColor};
       font-weight: 500;
+      font-size: 15px;
     }
   }
   .top-bar {

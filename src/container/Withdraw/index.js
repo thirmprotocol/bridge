@@ -224,7 +224,7 @@ function Withdraw() {
       <div className="top-bar">
         <div></div>
         <div className="balance-info">
-          <p><span>{tokenBal} {tokensList[asset].name}</span></p>
+          <p>{tokenBal} {tokensList[asset].name}</p>
         </div>
       </div>
       <StyledInputArea>
@@ -314,7 +314,7 @@ function Withdraw() {
           <KeyboardArrowLeft /> Go Back
           </GoBackButton>
         <div className="balance-info">
-          <p><span>{tokenBal} {tokensList[asset].name}</span></p>
+          <p>{tokenBal} {tokensList[asset].name}</p>
         </div>
       </div>
       <h5 className="list-title">Your Withdraw Summary</h5>
@@ -364,7 +364,7 @@ function Withdraw() {
           <KeyboardArrowLeft /> Go Back
           </GoBackButton>
         <div className="balance-info">
-          <p><span>{tokenBal} {tokensList[asset].name}</span></p>
+          <p>{tokenBal} {tokensList[asset].name}</p>
         </div>
       </div>
 
