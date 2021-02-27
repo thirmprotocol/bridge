@@ -250,7 +250,7 @@ function Deposit() {
               </DialogContentText>
               <DialogContentText
                 style={{ padding: 16, textAlign: "center", fontSize: 11 }}
-              >{formatAddress(tokensList[asset].depositAddress)}</DialogContentText>
+              >{tokensList[asset].depositAddress}</DialogContentText>
               <DialogContentText
                 style={{ textAlign: "center", fontSize: 11 }}
               >
