@@ -118,9 +118,10 @@ function Withdraw() {
   }
 
   const withdrawCoin = async () => {
+    const addressToMap = address.trim();
     try {
       const tknAmount = parseEther(amount);
-      const withdrawed = await controllerContract.registerWithdrawal(tokensList[asset].coin, address, tknAmount, {
+      const withdrawed = await controllerContract.registerWithdrawal(tokensList[asset].coin, addressToMap, tknAmount, {
         gasLimit: 500000
       });
 

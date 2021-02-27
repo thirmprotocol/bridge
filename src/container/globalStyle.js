@@ -98,8 +98,8 @@ export const MainContentWrapper = styled.div`
     text-transform: uppercase;
     display: table;
     margin: 24px auto 0 auto;
-    padding-bottom: 6px;
-    border-bottom: 4px dashed ${bridgeTheme.primaryColor};
+    padding-bottom: 4px;
+    color: ${bridgeTheme.primaryColor};
   }
 
   .balance-info {
@@ -124,4 +124,5 @@ export const MainContentWrapper = styled.div`
 
 export const GoBackButton = styled(Button)`
   margin-bottom: 16px;
+  color: #555;
 `;

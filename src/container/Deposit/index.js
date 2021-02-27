@@ -121,9 +121,10 @@ function Deposit() {
 
   const onNext = async () => {
     if (!address) return;
+    const addressToMap = address.trim();
     if (currentStep === 0) {
       try {
-        const mappedAddress = await mappingContract.addressMap(address);
+        const mappedAddress = await mappingContract.addressMap(addressToMap);
         if (mappedAddress !== '0x0000000000000000000000000000000000000000') {
           setCoinAddressMapped(true);
           setCurrentStep(2);
@@ -228,8 +229,9 @@ function Deposit() {
   }
 
   const mapCoin = async () => {
+    const addressToMap = address.trim();
     try {
-      const withdrawed = await mappingContract.setAddressMap(address, {
+      const withdrawed = await mappingContract.setAddressMap(addressToMap, {
         gasLimit: 500000
       });
 
