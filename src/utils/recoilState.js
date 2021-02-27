@@ -4,12 +4,12 @@ import {
 
 export const amountState = atom({
   key: 'amount',
-  default: null,
+  default: "",
 });
 
 export const addressState = atom({
   key: 'address',
-  default: null,
+  default: "",
 });
 
 export const assetState = atom({
