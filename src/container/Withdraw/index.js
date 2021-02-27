@@ -64,7 +64,7 @@ function Withdraw() {
 
       const tokenContract = getThirmTokenContract(library, account, tokensListTemp[asset].address);
       const bal = await tokenContract.balanceOf(account);
-      const tokenBal = parseFloat(formatEther(bal)).toFixed(8)
+      const tokenBal = parseFloat(formatEther(bal)).toFixed(8);
 
       if (!stale) {
         setTokenBal(tokenBal);

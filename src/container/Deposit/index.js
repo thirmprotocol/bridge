@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
-import { Avatar, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, Grid, InputLabel, ListItemSecondaryAction, ListItemText, MenuItem, OutlinedInput, Select, Slide, Snackbar, Step, StepContent, StepLabel, Typography } from '@material-ui/core';
+import { Avatar, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Fade, FormControl, Grid, InputLabel, ListItemSecondaryAction, ListItemText, MenuItem, OutlinedInput, Select, Snackbar, Step, StepContent, StepLabel, Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import { KeyboardArrowLeft, TrendingFlat } from '@material-ui/icons';
 import Alert from '@material-ui/lab/Alert';
@@ -18,12 +18,12 @@ import { StyledStepper } from '../Withdraw/style';
 import config from './../../utils/config/index';
 import { getThirmTokenContract } from './../../utils/index';
 import { addressState, assetState } from './../../utils/recoilState';
-import { GoBackButton, StyledButton, StyledInputArea, StyledList, StyledListItem } from './../globalStyle';
+import { bridgeTheme, GoBackButton, StyledButton, StyledInputArea, StyledList, StyledListItem } from './../globalStyle';
 import { DepositWrapper } from './style';
 
 
 const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
+  return <Fade in ref={ref} {...props} />;
 });
 
 function Deposit() {
@@ -37,6 +37,8 @@ function Deposit() {
   const { account, library } = useWeb3React();
 
   const [tokensList, setTokensList] = useState([]);
+
+  const [thirmBal, setThirmBal] = useState("0.00000000");
 
   const [coinAddressMapped, setCoinAddressMapped] = useState(false);
 
@@ -62,6 +64,13 @@ function Deposit() {
       let tokensListTemp = [...config.tokens];
       if (!stale) {
         setTokensList(tokensListTemp);
+      }
+
+      const bal = await thirmContract.balanceOf(account);
+      const tokenBal = parseFloat(formatEther(bal)).toFixed(8);
+
+      if (!stale) {
+        setThirmBal(tokenBal);
       }
     };
     getTokensList();
@@ -316,7 +325,9 @@ function Deposit() {
       <GoBackButton color="primary" onClick={onBack}>
         <KeyboardArrowLeft /> Go Back
           </GoBackButton>
-
+      <div className="balance-info">
+        <p>You have <span>{thirmBal} THIRM</span></p>
+      </div>
       <StyledStepper activeStep={stepperPosition} orientation="vertical">
         {steps.map((label, index) => (
           <Step key={label}>
@@ -420,12 +431,12 @@ function Deposit() {
         aria-labelledby="alert-dialog-slide-title"
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle style={{ padding: 24, textAlign: "center" }}>{`Deposit ${tokensList[asset].coin}`}</DialogTitle>
+        <DialogTitle style={{ padding: 24, textAlign: "center", color: bridgeTheme.primaryColor }}>{`DEPOSIT ${tokensList[asset].coin}`}</DialogTitle>
         <DialogContent>
           <DialogContentText
-            style={{ padding: 24, textAlign: "center" }}
+            style={{ padding: "16px 24px", textAlign: "center" }}
           >
-            <QRCode value={tokensList[asset].depositAddress} size={230} />
+            <QRCode value={tokensList[asset].depositAddress} size={250} />
           </DialogContentText>
           <div
             style={{ padding: 16, textAlign: "center", fontSize: 11 }}
@@ -434,7 +445,7 @@ function Deposit() {
               value={tokensList[asset].depositAddress}
               id="outlined-adornment-address"
               fullWidth
-              style={{ width: 300 }}
+              style={{ width: 320 }}
             />
           </div>
 

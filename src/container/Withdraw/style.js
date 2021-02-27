@@ -1,5 +1,6 @@
 import { Stepper } from '@material-ui/core';
 import styled from 'styled-components';
+import { bridgeTheme } from './../globalStyle';
 
 export const WithdrawWrapper = styled.div`
   .button-groups {
@@ -9,18 +10,20 @@ export const WithdrawWrapper = styled.div`
   }
   .balance-info {
     padding: 0 4px;
-    text-align: right;
+    text-align: center;
     color: #666;
     p span {
-      color: #e74c3c;
+      color: ${bridgeTheme.secondaryColor};
       font-weight: 500;
       cursor: pointer;
     }
   }
 
   position: relative;
-  min-height: 450px;
+  min-height: 460px;
   padding: 8px 0;
+  display: flex;
+  flex-direction: column;
   .next-button {
     position: absolute;
     bottom: 0;
