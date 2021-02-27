@@ -1,21 +1,26 @@
-import { Avatar, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, Grid, InputLabel, ListItemSecondaryAction, ListItemText, MenuItem, OutlinedInput, Select, Slide, Snackbar, Typography } from '@material-ui/core';
+/* eslint-disable react-hooks/exhaustive-deps */
+
+import { Avatar, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, Grid, InputLabel, ListItemSecondaryAction, ListItemText, MenuItem, OutlinedInput, Select, Slide, Snackbar, Step, StepContent, StepLabel, Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import { KeyboardArrowLeft, TrendingFlat } from '@material-ui/icons';
 import Alert from '@material-ui/lab/Alert';
 import { useWeb3React } from '@web3-react/core';
+import { formatEther, parseEther } from 'ethers/lib/utils';
 import React, { useEffect, useState } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import QRCode from 'react-qr-code';
 import {
   useRecoilState
 } from 'recoil';
-import oopsImage from '../../assets/images/oops.png';
-import { useMappingContract } from '../../hooks';
+import { useMappingContract, useThirmContract } from '../../hooks';
 import { formatAddress } from '../../utils';
+import { StyledStepper } from '../Withdraw/style';
 import config from './../../utils/config/index';
+import { getThirmTokenContract } from './../../utils/index';
 import { addressState, assetState } from './../../utils/recoilState';
 import { GoBackButton, StyledButton, StyledInputArea, StyledList, StyledListItem } from './../globalStyle';
 import { DepositWrapper } from './style';
+
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -29,13 +34,21 @@ function Deposit() {
 
   const [currentStep, setCurrentStep] = useState(0);
 
-  const { account } = useWeb3React();
+  const { account, library } = useWeb3React();
 
   const [tokensList, setTokensList] = useState([]);
 
   const [coinAddressMapped, setCoinAddressMapped] = useState(false);
 
+  const steps = ['Approve THIRM', 'Finish Mapping'];
+
+  const [stepperPosition, setStepperPosition] = useState(0);
+
   const mappingContract = useMappingContract();
+
+  const thirmContract = useThirmContract();
+
+  const [processingIndicator, setProcessingIndicator] = useState(false);
 
   const [snackBar, setSnackBar] = useState({
     status: false,
@@ -57,6 +70,33 @@ function Deposit() {
     };
   }, []);
 
+  useEffect(() => {
+    const checkWithdrawSteps = async () => {
+      try {
+
+        if (stepperPosition === 0) {
+
+          const tokenAllowance = await thirmContract.allowance(account, config.MAPPING_CONTRACT_ADDRESS);
+
+          const bal = await thirmContract.balanceOf(account);
+
+          if (!tokenAllowance.eq(0) && tokenAllowance.gte(bal)) {
+            setStepperPosition(1);
+          }
+        }
+
+      } catch (e) {
+        console.log(e);
+      }
+    }
+
+    if (tokensList.length > 0) {
+      checkWithdrawSteps();
+    }
+
+
+  }, [tokensList, stepperPosition]);
+
   const handleChange = (prop) => (event) => {
     if (prop === "address") setAddress(event.target.value);
     if (prop === "asset") setAsset(event.target.value);
@@ -64,25 +104,42 @@ function Deposit() {
 
   const onNext = async () => {
     if (!address) return;
+    if (currentStep === 0) {
+      try {
+        const mappedAddress = await mappingContract.addressMap(address);
+        if (mappedAddress !== '0x0000000000000000000000000000000000000000') {
+          setCoinAddressMapped(true);
+          setCurrentStep(2);
+        } else {
+          setCurrentStep(1);
+          setCoinAddressMapped(false);
+        }
 
-    setCoinAddressMapped(false);
-    try {
-      const mappedAddress = await mappingContract.addressMap(address);
-      if (mappedAddress !== '0x0000000000000000000000000000000000000000') {
-        setCoinAddressMapped(true);
+      } catch (e) {
+        console.log(e);
+        setCurrentStep(1);
       }
-      setCurrentStep(1);
-    } catch (e) {
-      console.log(e);
-      setCurrentStep(1);
+      return;
     }
 
-    setCurrentStep(1);
+    setCurrentStep(prevStep =>
+      prevStep + 1
+    );
   }
 
   const onBack = () => {
-    setCurrentStep(0);
+    if (currentStep === 2 && coinAddressMapped) {
+      setCurrentStep(0);
+      return;
+    }
+    setCurrentStep(prevStep =>
+      prevStep - 1
+    );
   }
+
+  const handleBack = () => {
+    setStepperPosition((prevActiveStep) => prevActiveStep - 1);
+  };
 
   const [openDialog, setOpenDialog] = React.useState(false);
 
@@ -104,6 +161,85 @@ function Deposit() {
       type: "success",
       message: ""
     });
+  };
+
+  const approveThirm = async () => {
+
+    try {
+
+      const tokenContract = getThirmTokenContract(library, account, config.THIRM_TOKEN_ADDRESS);
+
+      const allowance = await thirmContract.allowance(account, config.MAPPING_CONTRACT_ADDRESS);
+
+      const bal = await thirmContract.balanceOf(account);
+
+
+      if (!allowance.eq(0) && allowance.gte(bal)) {
+        setStepperPosition(1);
+        return;
+      }
+
+      const toBurnEth = 10 * formatEther(await mappingContract.BURN_AMOUNT());
+      const toBurnAllowance = parseEther(toBurnEth.toString());
+
+      const approved = await tokenContract.approve(config.MAPPING_CONTRACT_ADDRESS, toBurnAllowance);
+
+      setProcessingIndicator(true);
+      library.once(approved.hash, (done) => {
+
+        if (done.status === 1) {
+          setStepperPosition(1);
+          setSnackBar({
+            status: true,
+            type: "success",
+            message: `THIRM approved`
+          });
+        } else {
+          setSnackBar({
+            status: true,
+            type: "error",
+            message: `THIRM approval failed.`
+          });
+        }
+
+        setProcessingIndicator(false);
+      });
+
+    } catch (e) {
+      console.log(e);
+    }
+
+  }
+
+  const mapCoin = async () => {
+    try {
+      const withdrawed = await mappingContract.setAddressMap(address, {
+        gasLimit: 500000
+      });
+
+      setProcessingIndicator(true);
+      library.once(withdrawed.hash, (done) => {
+
+        if (done.status === 1) {
+          setSnackBar({
+            status: true,
+            type: "success",
+            message: `Your address has been mapped.`
+          });
+          setCurrentStep(2);
+        } else {
+          setSnackBar({
+            status: true,
+            type: "error",
+            message: `Address mapping failed.`
+          });
+        }
+        setProcessingIndicator(false);
+      });
+
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   if (tokensList.length === 0) return null;
@@ -177,121 +313,161 @@ function Deposit() {
 
   if (currentStep === 1) {
     return <DepositWrapper>
-      {
-        !coinAddressMapped && <Grid container
-          direction="column"
-          justify="center"
-          alignItems="flex-start">
-          <GoBackButton color="primary" onClick={onBack}>
-            <KeyboardArrowLeft /> Go Back
-      </GoBackButton>
-          <img className="deposit-error-image" src={oopsImage} alt="oops" />
-          <p className="oops-message">
-            Your address is not mapped yet for deposit.<br />
-          Please email us at <a href="mailto:developer@thirm.com">developer@thirm.com</a> for the mapping.
-        </p>
-        </Grid>
-      }
-
-      {
-        coinAddressMapped && <>
-          <GoBackButton color="primary" onClick={onBack}>
-            <KeyboardArrowLeft /> Go Back
+      <GoBackButton color="primary" onClick={onBack}>
+        <KeyboardArrowLeft /> Go Back
           </GoBackButton>
-          <h5 className="list-title">Your Deposit Summary</h5>
 
-          <StyledList>
+      <StyledStepper activeStep={stepperPosition} orientation="vertical">
+        {steps.map((label, index) => (
+          <Step key={label}>
+            <StepLabel>{label}</StepLabel>
+            <StepContent>
+              {
+                index === 0 && <>
+                  <div className="button-groups">
+                    <Button
+                      disabled={stepperPosition === 0}
+                      onClick={handleBack}
+                    >
+                      Back
+                    </Button>
+                    <StyledButton
+                      fullWidth
+                      variant="contained"
+                      color="primary"
+                      onClick={approveThirm}
+                    >
+                      {processingIndicator && <CircularProgress size={24} color="secondary" />} Approve THIRM
+                        </StyledButton>
+                  </div>
+                </>
+              }
 
-            <StyledListItem>
-              <ListItemText primary="Asset" />
-              <ListItemSecondaryAction>
-                {tokensList[asset].coin}
-              </ListItemSecondaryAction>
-            </StyledListItem>
+              {
+                index === 1 && <>
+                  <div className="button-groups">
+                    <Button
+                      disabled={stepperPosition === 0}
+                      onClick={handleBack}
+                    >
+                      Back
+                          </Button>
+                    <StyledButton fullWidth variant="contained" color="primary" onClick={mapCoin}>
 
-            <StyledListItem>
-              <ListItemText primary={`${tokensList[asset].coin} Address`} />
-              <ListItemSecondaryAction>
-                {formatAddress(address)}
-              </ListItemSecondaryAction>
-            </StyledListItem>
+                      Map my address
+                        </StyledButton>
+                  </div>
+                </>
+              }
+            </StepContent>
+          </Step>
+        ))}
+      </StyledStepper>
+      <Snackbar open={snackBar.status} autoHideDuration={6000} onClose={handleSnackBarClose} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
+        <Alert onClose={handleSnackBarClose} severity={snackBar.type}>
+          {snackBar.message}
+        </Alert>
+      </Snackbar>
+    </DepositWrapper>
+  }
 
-            <StyledListItem>
-              <ListItemText primary="Destination" />
-              <ListItemSecondaryAction>
-                {formatAddress(account)}
-              </ListItemSecondaryAction>
-            </StyledListItem>
+  if (currentStep === 2) {
+    return <DepositWrapper>
+      <GoBackButton color="primary" onClick={onBack}>
+        <KeyboardArrowLeft /> Go Back
+          </GoBackButton>
+      <h5 className="list-title">Your Deposit Summary</h5>
 
-            <StyledListItem>
-              <ListItemText primary="You will Receive" />
-              <ListItemSecondaryAction>
-                <p>{tokensList[asset].name}</p>
-              </ListItemSecondaryAction>
-            </StyledListItem>
-          </StyledList>
-          <StyledButton className="next-button" fullWidth variant="contained" color="primary" onClick={openDepositDialog}>
-            Deposit
+      <StyledList>
+
+        <StyledListItem>
+          <ListItemText primary="Asset" />
+          <ListItemSecondaryAction>
+            {tokensList[asset].coin}
+          </ListItemSecondaryAction>
+        </StyledListItem>
+
+        <StyledListItem>
+          <ListItemText primary={`${tokensList[asset].coin} Address`} />
+          <ListItemSecondaryAction>
+            {formatAddress(address)}
+          </ListItemSecondaryAction>
+        </StyledListItem>
+
+        <StyledListItem>
+          <ListItemText primary="Destination" />
+          <ListItemSecondaryAction>
+            {formatAddress(account)}
+          </ListItemSecondaryAction>
+        </StyledListItem>
+
+        <StyledListItem>
+          <ListItemText primary="You will Receive" />
+          <ListItemSecondaryAction>
+            <p>{tokensList[asset].name}</p>
+          </ListItemSecondaryAction>
+        </StyledListItem>
+      </StyledList>
+      <StyledButton className="next-button" fullWidth variant="contained" color="primary" onClick={openDepositDialog}>
+        Deposit
       </StyledButton>
 
-          <Dialog
-            open={openDialog}
-            TransitionComponent={Transition}
-            keepMounted
-            onClose={closeDepositDialog}
-            aria-labelledby="alert-dialog-slide-title"
-            aria-describedby="alert-dialog-slide-description"
+      <Dialog
+        open={openDialog}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={closeDepositDialog}
+        aria-labelledby="alert-dialog-slide-title"
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle style={{ padding: 24, textAlign: "center" }}>{`Deposit ${tokensList[asset].coin}`}</DialogTitle>
+        <DialogContent>
+          <DialogContentText
+            style={{ padding: 24, textAlign: "center" }}
           >
-            <DialogTitle style={{ padding: 24, textAlign: "center" }}>{`Deposit ${tokensList[asset].coin}`}</DialogTitle>
-            <DialogContent>
-              <DialogContentText
-                style={{ padding: 24, textAlign: "center" }}
-              >
-                <QRCode value={tokensList[asset].depositAddress} size={230} />
-              </DialogContentText>
-              <div
-                style={{ padding: 16, textAlign: "center", fontSize: 11 }}
-              >
-                <OutlinedInput
-                  value={tokensList[asset].depositAddress}
-                  id="outlined-adornment-address"
-                  fullWidth
-                  style={{ width: 300 }}
-                />
-              </div>
+            <QRCode value={tokensList[asset].depositAddress} size={230} />
+          </DialogContentText>
+          <div
+            style={{ padding: 16, textAlign: "center", fontSize: 11 }}
+          >
+            <OutlinedInput
+              value={tokensList[asset].depositAddress}
+              id="outlined-adornment-address"
+              fullWidth
+              style={{ width: 300 }}
+            />
+          </div>
 
-              <DialogContentText
-                style={{ textAlign: "center", fontSize: 11 }}
-              >
-                <CopyToClipboard text={tokensList[asset].depositAddress} onCopy={() => {
-                  setSnackBar({
-                    status: true,
-                    type: "info",
-                    message: `Deposit address copied.`
-                  });
-                }}>
-                  <Button link>Copy Deposit Address</Button>
-                </CopyToClipboard>
-              </DialogContentText>
+          <DialogContentText
+            style={{ textAlign: "center", fontSize: 11 }}
+          >
+            <CopyToClipboard text={tokensList[asset].depositAddress} onCopy={() => {
+              setSnackBar({
+                status: true,
+                type: "info",
+                message: `Deposit address copied.`
+              });
+            }}>
+              <Button>Copy Deposit Address</Button>
+            </CopyToClipboard>
+          </DialogContentText>
 
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={closeDepositDialog} color="primary">
-                Dismiss
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeDepositDialog} color="primary">
+            Dismiss
           </Button>
-              <Button onClick={closeDepositDialog} color="primary">
-                Done
+          <Button onClick={closeDepositDialog} color="primary">
+            Done
           </Button>
-            </DialogActions>
-          </Dialog>
+        </DialogActions>
+      </Dialog>
 
-          <Snackbar open={snackBar.status} autoHideDuration={6000} onClose={handleSnackBarClose} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
-            <Alert onClose={handleSnackBarClose} severity={snackBar.type}>
-              {snackBar.message}
-            </Alert>
-          </Snackbar>
-        </>
-      }
+      <Snackbar open={snackBar.status} autoHideDuration={6000} onClose={handleSnackBarClose} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
+        <Alert onClose={handleSnackBarClose} severity={snackBar.type}>
+          {snackBar.message}
+        </Alert>
+      </Snackbar>
     </DepositWrapper>
   }
 

@@ -18,10 +18,6 @@ import { addressState, amountState, assetState } from './../../utils/recoilState
 import { GoBackButton, StyledButton, StyledInputArea, StyledList, StyledListItem } from './../globalStyle';
 import { StyledStepper, WithdrawWrapper } from './style';
 
-function getSteps() {
-  return ['Approve Token', 'Finish Withdraw'];
-}
-
 const ALLOWANCE_LIMIT = ethers.BigNumber.from("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
 
 
@@ -51,7 +47,7 @@ function Withdraw() {
 
   const [stepperPosition, setStepperPosition] = useState(0);
 
-  const steps = getSteps();
+  const steps = ['Approve Token', 'Finish Withdraw'];
 
   const [tokenBal, setTokenBal] = useState("0.00000000");
 
