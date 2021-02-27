@@ -197,7 +197,8 @@ function Deposit() {
         coinAddressMapped && <>
           <GoBackButton color="primary" onClick={onBack}>
             <KeyboardArrowLeft /> Go Back
-      </GoBackButton>
+          </GoBackButton>
+          <h5 className="list-title">Your Deposit Summary</h5>
 
           <StyledList>
 
@@ -257,10 +258,7 @@ function Deposit() {
                   fullWidth
                   style={{ width: 300 }}
                 />
-
-
               </div>
-
 
               <DialogContentText
                 style={{ textAlign: "center", fontSize: 11 }}

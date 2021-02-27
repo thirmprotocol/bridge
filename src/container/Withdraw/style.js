@@ -10,10 +10,10 @@ export const WithdrawWrapper = styled.div`
   .balance-info {
     padding: 0 4px;
     text-align: right;
+    color: #666;
     p span {
-      color: #0652DD;
+      color: #e74c3c;
       font-weight: 500;
-      text-decoration: underline;
       cursor: pointer;
     }
   }
@@ -30,6 +30,5 @@ export const WithdrawWrapper = styled.div`
 `;
 
 export const StyledStepper = styled(Stepper)`
-  margin-left: -25px;
-  margin-right: -30px;
+  margin: 24px 0;
 `;

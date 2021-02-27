@@ -30,6 +30,15 @@ export const StyledButton = styled(Button)`
   svg {
     font-size: 32px;
   }
+
+  .MuiSvgIcon-root {
+    margin-right: 8px;
+  }
+
+  &.completed {
+    background-image: none;
+    background-color: #6ab04c;
+  }
 `;
 
 
@@ -73,6 +82,13 @@ export const MainContentWrapper = styled.div`
   height: 100vh;
   display: flex;
   flex-direction: column;
+  .list-title {
+    font-size: 16px;
+    text-align: center;
+    margin: 16px 8px 24px 8px;
+    font-weight: 500;
+    text-transform: uppercase;
+  }
 `;
 
 export const GoBackButton = styled(Button)`

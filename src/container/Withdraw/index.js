@@ -2,6 +2,7 @@
 import { Avatar, CircularProgress, FormControl, Grid, InputAdornment, InputLabel, ListItemSecondaryAction, ListItemText, MenuItem, OutlinedInput, Select, Snackbar, Step, StepContent, StepLabel, Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import { KeyboardArrowLeft, TrendingFlat } from '@material-ui/icons';
+import CheckIcon from '@material-ui/icons/Check';
 import Alert from '@material-ui/lab/Alert';
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
@@ -18,7 +19,7 @@ import { GoBackButton, StyledButton, StyledInputArea, StyledList, StyledListItem
 import { StyledStepper, WithdrawWrapper } from './style';
 
 function getSteps() {
-  return ['Check withdraw information', 'Approve Token', 'Finish Withdraw'];
+  return ['Approve Token', 'Finish Withdraw'];
 }
 
 const ALLOWANCE_LIMIT = ethers.BigNumber.from("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
@@ -44,7 +45,7 @@ function Withdraw() {
 
   const { account, library } = useWeb3React();
 
-  const [processingApproval, setProcessingApproval] = useState(false);
+  const [processingIndicator, setProcessingIndicator] = useState(false);
 
   const controllerContract = useControllerContract();
 
@@ -53,6 +54,8 @@ function Withdraw() {
   const steps = getSteps();
 
   const [tokenBal, setTokenBal] = useState("0.00000000");
+
+  const [withDrawComplete, setWithdrawComplete] = useState(false);
 
   useEffect(() => {
     let stale = false;
@@ -81,7 +84,7 @@ function Withdraw() {
     const checkWithdrawSteps = async () => {
       try {
 
-        if (stepperPosition === 1) {
+        if (stepperPosition === 0) {
           const tokenContract = getThirmTokenContract(library, account, tokensList[asset].address);
 
           const tokenAllowance = await tokenContract.allowance(account, config.CONTROLLER_CONTRACT_ADDRESS);
@@ -89,7 +92,7 @@ function Withdraw() {
           const bal = await tokenContract.balanceOf(account);
 
           if (!tokenAllowance.eq(0) && tokenAllowance.gte(bal)) {
-            setStepperPosition(2);
+            setStepperPosition(1);
           }
         }
 
@@ -113,35 +116,36 @@ function Withdraw() {
 
   const onNext = async () => {
     if (!amount || !address || amount <= 0) return;
-    setCurrentStep(1);
+    setCurrentStep(prevStep =>
+      prevStep + 1
+    );
   }
 
   const withdrawCoin = async () => {
-
     try {
       const tknAmount = parseEther(amount);
       const withdrawed = await controllerContract.registerWithdrawal(tokensList[asset].coin, address, tknAmount, {
         gasLimit: 500000
       });
 
-      setProcessingApproval(true);
+      setProcessingIndicator(true);
       library.once(withdrawed.hash, (done) => {
 
         if (done.status === 1) {
-          setProcessingApproval(false);
           setSnackBar({
             status: true,
             type: "success",
             message: `Token withdrawn`
           });
+          setWithdrawComplete(true);
         } else {
           setSnackBar({
             status: true,
             type: "error",
             message: `Token withdraw failed.`
           });
-          setProcessingApproval(false);
         }
+        setProcessingIndicator(false);
       });
 
     } catch (e) {
@@ -150,12 +154,10 @@ function Withdraw() {
   };
 
   const onBack = () => {
-    setCurrentStep(0);
+    setCurrentStep(prevStep =>
+      prevStep - 1
+    );
   }
-
-  const startWithdraw = () => {
-    setStepperPosition(1);
-  };
 
   const handleBack = () => {
     setStepperPosition((prevActiveStep) => prevActiveStep - 1);
@@ -172,17 +174,17 @@ function Withdraw() {
       const bal = await tokenContract.balanceOf(account);
 
       if (!tokenAllowance.eq(0) && tokenAllowance.gte(bal)) {
-        setStepperPosition(3);
+        setStepperPosition(1);
         return;
       }
 
       const approved = await tokenContract.approve(config.CONTROLLER_CONTRACT_ADDRESS, ALLOWANCE_LIMIT);
 
-      setProcessingApproval(true);
+      setProcessingIndicator(true);
       library.once(approved.hash, (done) => {
 
         if (done.status === 1) {
-          setStepperPosition(2);
+          setStepperPosition(1);
           setSnackBar({
             status: true,
             type: "success",
@@ -195,7 +197,7 @@ function Withdraw() {
             message: `${tokensList[asset].name} token approval failed.`
           });
         }
-        setProcessingApproval(false);
+        setProcessingIndicator(false);
       });
 
     } catch (e) {
@@ -207,7 +209,6 @@ function Withdraw() {
     if (reason === 'clickaway') {
       return;
     }
-
     setSnackBar({
       status: false,
       type: "success",
@@ -303,6 +304,50 @@ function Withdraw() {
     return <WithdrawWrapper>
       <GoBackButton color="primary" onClick={onBack}>
         <KeyboardArrowLeft /> Go Back
+      </GoBackButton>
+      <h5 className="list-title">Your Withdraw Summary</h5>
+      <StyledList>
+        <StyledListItem>
+          <ListItemText primary="Asset" />
+          <ListItemSecondaryAction>
+            {tokensList[asset].name}
+          </ListItemSecondaryAction>
+        </StyledListItem>
+
+        <StyledListItem>
+          <ListItemText primary="Amount" />
+          <ListItemSecondaryAction>
+            {amount} {tokensList[asset].name}
+          </ListItemSecondaryAction>
+        </StyledListItem>
+
+        <StyledListItem>
+          <ListItemText primary={`${tokensList[asset].coin} Address`} />
+          <ListItemSecondaryAction>
+            {formatAddress(address)}
+          </ListItemSecondaryAction>
+        </StyledListItem>
+
+        <StyledListItem>
+          <ListItemText primary="You will Receive" />
+          <ListItemSecondaryAction>
+            {tokensList[asset].coin}
+          </ListItemSecondaryAction>
+        </StyledListItem>
+      </StyledList>
+
+      <StyledButton className="next-button" fullWidth variant="contained" color="primary" onClick={onNext}>
+        <span>Next</span>
+        <TrendingFlat />
+      </StyledButton>
+
+    </WithdrawWrapper>
+  }
+
+  if (currentStep === 2) {
+    return <WithdrawWrapper>
+      <GoBackButton color="primary" onClick={onBack}>
+        <KeyboardArrowLeft /> Go Back
           </GoBackButton>
 
       <StyledStepper activeStep={stepperPosition} orientation="vertical">
@@ -312,51 +357,20 @@ function Withdraw() {
             <StepContent>
               {
                 index === 0 && <>
-                  <StyledList>
-                    <StyledListItem>
-                      <ListItemText primary="Asset" />
-                      <ListItemSecondaryAction>
-                        {tokensList[asset].name}
-                      </ListItemSecondaryAction>
-                    </StyledListItem>
-
-                    <StyledListItem>
-                      <ListItemText primary="Amount" />
-                      <ListItemSecondaryAction>
-                        {amount} {tokensList[asset].name}
-                      </ListItemSecondaryAction>
-                    </StyledListItem>
-
-                    <StyledListItem>
-                      <ListItemText primary={`${tokensList[asset].coin} Address`} />
-                      <ListItemSecondaryAction>
-                        {formatAddress(address)}
-                      </ListItemSecondaryAction>
-                    </StyledListItem>
-
-                    <StyledListItem>
-                      <ListItemText primary="You will Receive" />
-                      <ListItemSecondaryAction>
-                        {tokensList[asset].coin}
-                      </ListItemSecondaryAction>
-                    </StyledListItem>
-                  </StyledList>
-
                   <div className="button-groups">
                     <Button
                       disabled={stepperPosition === 0}
                       onClick={handleBack}
                     >
                       Back
-                          </Button>
+                    </Button>
                     <StyledButton
                       fullWidth
                       variant="contained"
                       color="primary"
-                      onClick={startWithdraw}
+                      onClick={approveCurrentToken}
                     >
-                      <span>Continue</span>
-                      <TrendingFlat />
+                      {processingIndicator && <CircularProgress size={24} color="secondary" />} Approve {tokensList[asset].name}
                     </StyledButton>
                   </div>
                 </>
@@ -371,30 +385,11 @@ function Withdraw() {
                     >
                       Back
                           </Button>
-                    <StyledButton
-                      fullWidth
-                      variant="contained"
-                      color="primary"
-                      onClick={approveCurrentToken}
-                    >
-                      {processingApproval && <CircularProgress size={24} />} Approve {tokensList[asset].name}
-                    </StyledButton>
-                  </div>
-                </>
-              }
+                    <StyledButton className={withDrawComplete && "completed"} fullWidth variant="contained" color="primary" onClick={withdrawCoin}>
 
-              {
-                index === 2 && <>
-                  <div className="button-groups">
-                    <Button
-                      disabled={stepperPosition === 0}
-                      onClick={handleBack}
-                    >
-                      Back
-                          </Button>
-                    <StyledButton fullWidth variant="contained" color="primary" onClick={withdrawCoin}>
-                      Withdraw
-                        </StyledButton>
+                      {withDrawComplete ? <><CheckIcon />Withdraw Completed</> : <>Withdraw</>
+                      }
+                    </StyledButton>
                   </div>
                 </>
               }
