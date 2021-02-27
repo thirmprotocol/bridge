@@ -221,74 +221,85 @@ function Withdraw() {
 
   if (currentStep === 0) {
     return <WithdrawWrapper>
-      <div>
-        <StyledInputArea>
-          <FormControl variant="outlined" fullWidth>
-            <InputLabel htmlFor="outlined-adornment-amount">Amount</InputLabel>
-            <OutlinedInput
-              value={amount}
-              onChange={handleChange('amount')}
-              endAdornment={<InputAdornment position="end">{tokensList[asset].name}</InputAdornment>}
-              id="outlined-adornment-amount"
-              labelWidth={60}
-              type="number"
-            />
-          </FormControl>
-        </StyledInputArea>
-        <StyledInputArea>
-          <FormControl variant="outlined" fullWidth>
-            <InputLabel htmlFor="outlined-adornment-amount">Destination {tokensList[asset].coin} Address</InputLabel>
-            <OutlinedInput
-              value={address}
-              onChange={handleChange('address')}
-              aria-describedby="outlined-amount-helper-text"
-              labelWidth={200}
-              id="outlined-adornment-address"
-            />
-          </FormControl>
-        </StyledInputArea>
+      <div className="top-bar">
+        <div></div>
         <div className="balance-info">
-          <p>You have <span onClick={onTokenMax}>{tokenBal} {tokensList[asset].name}</span></p>
+          <p><span>{tokenBal} {tokensList[asset].name}</span></p>
         </div>
-        <StyledList>
-          <StyledListItem>
-            <ListItemText primary="Asset" />
-            <ListItemSecondaryAction>
-              <FormControl variant="outlined">
-                <Select
-                  value={asset}
-                  onChange={handleChange('asset')}
-                >
-                  {
-                    tokensList.map((tkn, index) =>
-                      <MenuItem value={index} key={index}>
-                        <Grid container
-                          direction="row"
-                          justify="flex-start"
-                          alignItems="center">
-                          <Avatar alt={tkn.name} src={tkn.image} style={{
-                            width: 24, height: 24
-                          }} />
-                          <Typography style={{ marginLeft: 16, marginRight: 16 }}>
-                            {tkn.name}
-                          </Typography>
-                        </Grid>
-                      </MenuItem>
-                    )
-                  }
-                </Select>
-              </FormControl>
-            </ListItemSecondaryAction>
-          </StyledListItem>
-
-          <StyledListItem>
-            <ListItemText primary="You will Receive" />
-            <ListItemSecondaryAction>
-              <p>{tokensList[asset].coin}</p>
-            </ListItemSecondaryAction>
-          </StyledListItem>
-        </StyledList>
       </div>
+      <StyledInputArea>
+        <FormControl variant="outlined" fullWidth>
+          <InputLabel htmlFor="outlined-adornment-amount">Amount</InputLabel>
+          <OutlinedInput
+            value={amount}
+            onChange={handleChange('amount')}
+            endAdornment={
+              <>
+                <InputAdornment position='end'>
+                  <Button
+                    onClick={onTokenMax}>
+                    MAX
+                  </Button>
+                </InputAdornment>
+                <InputAdornment position="end">{tokensList[asset].name}</InputAdornment>
+              </>}
+            id="outlined-adornment-amount"
+            labelWidth={60}
+            type="number"
+          />
+        </FormControl>
+      </StyledInputArea>
+      <StyledInputArea>
+        <FormControl variant="outlined" fullWidth>
+          <InputLabel htmlFor="outlined-adornment-amount">Destination {tokensList[asset].coin} Address</InputLabel>
+          <OutlinedInput
+            value={address}
+            onChange={handleChange('address')}
+            aria-describedby="outlined-amount-helper-text"
+            labelWidth={200}
+            id="outlined-adornment-address"
+          />
+        </FormControl>
+      </StyledInputArea>
+
+      <StyledList>
+        <StyledListItem>
+          <ListItemText primary="Asset" />
+          <ListItemSecondaryAction>
+            <FormControl variant="outlined">
+              <Select
+                value={asset}
+                onChange={handleChange('asset')}
+              >
+                {
+                  tokensList.map((tkn, index) =>
+                    <MenuItem value={index} key={index}>
+                      <Grid container
+                        direction="row"
+                        justify="flex-start"
+                        alignItems="center">
+                        <Avatar alt={tkn.name} src={tkn.image} style={{
+                          width: 24, height: 24
+                        }} />
+                        <Typography style={{ marginLeft: 16, marginRight: 16 }}>
+                          {tkn.name}
+                        </Typography>
+                      </Grid>
+                    </MenuItem>
+                  )
+                }
+              </Select>
+            </FormControl>
+          </ListItemSecondaryAction>
+        </StyledListItem>
+
+        <StyledListItem>
+          <ListItemText primary="You will Receive" />
+          <ListItemSecondaryAction>
+            <p>{tokensList[asset].coin}</p>
+          </ListItemSecondaryAction>
+        </StyledListItem>
+      </StyledList>
       <StyledButton className="next-button" fullWidth variant="contained" color="primary" onClick={onNext} disabled={!amount || !address}>
         <span>Next</span>
         <TrendingFlat />
@@ -298,9 +309,14 @@ function Withdraw() {
 
   if (currentStep === 1) {
     return <WithdrawWrapper>
-      <GoBackButton color="primary" onClick={onBack}>
-        <KeyboardArrowLeft /> Go Back
-      </GoBackButton>
+      <div className="top-bar">
+        <GoBackButton color="primary" onClick={onBack}>
+          <KeyboardArrowLeft /> Go Back
+          </GoBackButton>
+        <div className="balance-info">
+          <p><span>{tokenBal} {tokensList[asset].name}</span></p>
+        </div>
+      </div>
       <h5 className="list-title">Your Withdraw Summary</h5>
       <StyledList>
         <StyledListItem>
@@ -342,9 +358,15 @@ function Withdraw() {
 
   if (currentStep === 2) {
     return <WithdrawWrapper>
-      <GoBackButton color="primary" onClick={onBack}>
-        <KeyboardArrowLeft /> Go Back
+
+      <div className="top-bar">
+        <GoBackButton color="primary" onClick={onBack}>
+          <KeyboardArrowLeft /> Go Back
           </GoBackButton>
+        <div className="balance-info">
+          <p><span>{tokenBal} {tokensList[asset].name}</span></p>
+        </div>
+      </div>
 
       <StyledStepper activeStep={stepperPosition} orientation="vertical">
         {steps.map((label, index) => (

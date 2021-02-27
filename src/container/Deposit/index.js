@@ -255,6 +255,12 @@ function Deposit() {
 
   if (currentStep === 0) {
     return <DepositWrapper>
+      <div className="top-bar">
+        <div></div>
+        <div className="balance-info">
+          <p><span>{thirmBal} THIRM</span></p>
+        </div>
+      </div>
       <StyledInputArea>
         <FormControl variant="outlined" fullWidth >
           <InputLabel htmlFor="outlined-adornment-address">{tokensList[asset].coin} Address</InputLabel>
@@ -266,6 +272,7 @@ function Deposit() {
           />
         </FormControl>
       </StyledInputArea>
+
       <StyledList>
         <StyledListItem>
           <ListItemText primary="Asset" />
@@ -322,9 +329,15 @@ function Deposit() {
 
   if (currentStep === 1) {
     return <DepositWrapper>
-      <GoBackButton color="primary" onClick={onBack}>
-        <KeyboardArrowLeft /> Go Back
+      <div className="top-bar">
+        <GoBackButton color="primary" onClick={onBack}>
+          <KeyboardArrowLeft /> Go Back
           </GoBackButton>
+        <div className="balance-info">
+          <p><span>{thirmBal} THIRM</span></p>
+        </div>
+      </div>
+
       <div className="balance-info">
         <p>You have <span>{thirmBal} THIRM</span></p>
       </div>
@@ -384,9 +397,14 @@ function Deposit() {
 
   if (currentStep === 2) {
     return <DepositWrapper>
-      <GoBackButton color="primary" onClick={onBack}>
-        <KeyboardArrowLeft /> Go Back
+      <div className="top-bar">
+        <GoBackButton color="primary" onClick={onBack}>
+          <KeyboardArrowLeft /> Go Back
           </GoBackButton>
+        <div className="balance-info">
+          <p><span>{thirmBal} THIRM</span></p>
+        </div>
+      </div>
       <h5 className="list-title">Your Deposit Summary</h5>
 
       <StyledList>

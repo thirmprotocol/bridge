@@ -81,6 +81,9 @@ export const StyledList = styled(List)`
 
 export const StyledInputArea = styled.div`
   margin: 24px 0;
+  .MuiButton-label {
+    color: ${bridgeTheme.primaryColor}
+  }
 `;
 
 export const MainContentWrapper = styled.div`
@@ -93,13 +96,30 @@ export const MainContentWrapper = styled.div`
     font-weight: 600;
     letter-spacing: 0.02em;
     text-transform: uppercase;
-    margin: 8px auto 0 auto;
+    margin: 16px auto 0 auto;
     padding-bottom: 4px;
-    border-bottom: 3px dashed #777;
+    border-bottom: 4px dashed #bdbdbd;
+  }
+
+  .balance-info {
+    text-align: center;
+    margin-bottom: 16px;
+    color: #666;
+    p span {
+      color: ${bridgeTheme.secondaryColor};
+      font-weight: 500;
+    }
+  }
+  .top-bar {
+    margin-top: -8px;
+    margin-bottom: -16px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
   }
 `;
 
 export const GoBackButton = styled(Button)`
   margin-bottom: 16px;
-  align-self: flex-start;
 `;
