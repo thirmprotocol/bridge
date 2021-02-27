@@ -248,9 +248,20 @@ function Deposit() {
               >
                 <QRCode value={tokensList[asset].depositAddress} size={230} />
               </DialogContentText>
-              <DialogContentText
+              <div
                 style={{ padding: 16, textAlign: "center", fontSize: 11 }}
-              >{tokensList[asset].depositAddress}</DialogContentText>
+              >
+                <OutlinedInput
+                  value={tokensList[asset].depositAddress}
+                  id="outlined-adornment-address"
+                  fullWidth
+                  style={{ width: 300 }}
+                />
+
+
+              </div>
+
+
               <DialogContentText
                 style={{ textAlign: "center", fontSize: 11 }}
               >
