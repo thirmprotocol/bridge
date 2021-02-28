@@ -301,7 +301,7 @@ function Withdraw() {
           </ListItemSecondaryAction>
         </StyledListItem>
       </StyledList>
-      <StyledButton className="next-button" fullWidth variant="contained" color="primary" onClick={onNext} disabled={!amount || !address}>
+      <StyledButton className="next-button" fullWidth variant="contained" color="primary" onClick={onNext} disabled={!amount || !address || amount > tokenBal}>
         <span>Next</span>
         <TrendingFlat />
       </StyledButton>
