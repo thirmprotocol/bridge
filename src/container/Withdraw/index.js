@@ -14,7 +14,7 @@ import {
 import { useControllerContract } from './../../hooks/index';
 import config from './../../utils/config/index';
 import { formatAddress, getThirmTokenContract } from './../../utils/index';
-import { addressState, amountState, assetState } from './../../utils/recoilState';
+import { addressState, amountState, assetState, tokenBalState } from './../../utils/recoilState';
 import { GoBackButton, StyledButton, StyledInputArea, StyledList, StyledListItem, StyledStepper } from './../globalStyle';
 import { WithdrawWrapper } from './style';
 
@@ -49,7 +49,7 @@ function Withdraw() {
 
   const steps = ['Approve Token', 'Finish Withdraw'];
 
-  const [tokenBal, setTokenBal] = useState("0.00000000");
+  const [tokenBal, setTokenBal] = useRecoilState(tokenBalState);
 
   const [withDrawComplete, setWithdrawComplete] = useState(false);
 

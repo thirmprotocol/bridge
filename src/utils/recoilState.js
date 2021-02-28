@@ -16,3 +16,13 @@ export const assetState = atom({
   key: 'asset',
   default: 0,
 });
+
+export const thirmBalState = atom({
+  key: 'thirm',
+  default: "0.00000000",
+});
+
+export const tokenBalState = atom({
+  key: 'token',
+  default: "0.00000000",
+});

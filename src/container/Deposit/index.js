@@ -16,7 +16,7 @@ import { useMappingContract, useThirmContract } from '../../hooks';
 import { formatAddress } from '../../utils';
 import config from './../../utils/config/index';
 import { getThirmTokenContract } from './../../utils/index';
-import { addressState, assetState } from './../../utils/recoilState';
+import { addressState, assetState, thirmBalState } from './../../utils/recoilState';
 import { bridgeTheme, GoBackButton, StyledButton, StyledInputArea, StyledList, StyledListItem, StyledStepper } from './../globalStyle';
 import { DepositWrapper } from './style';
 
@@ -37,7 +37,7 @@ function Deposit() {
 
   const [tokensList, setTokensList] = useState([]);
 
-  const [thirmBal, setThirmBal] = useState("0.00000000");
+  const [thirmBal, setThirmBal] = useRecoilState(thirmBalState);
 
   const [burnBal, setBurnBal] = useState("0");
 
