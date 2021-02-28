@@ -111,7 +111,7 @@ function Deposit() {
     }
 
 
-  }, [tokensList, stepperPosition, currentStep]);
+  }, [tokensList, stepperPosition, currentStep, coinAddressMapped]);
 
   const handleChange = (prop) => (event) => {
     if (prop === "address") setAddress(event.target.value);
@@ -145,7 +145,7 @@ function Deposit() {
   }
 
   const onBack = () => {
-    if (currentStep === 2 && coinAddressMapped) {
+    if (currentStep === 2 || coinAddressMapped) {
       setCurrentStep(0);
       return;
     }
