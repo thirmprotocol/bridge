@@ -38,8 +38,9 @@ export const StyledButton = styled(Button)`
     font-size: 32px;
   }
 
-  .MuiSvgIcon-root {
+  .MuiCircularProgress-root {
     margin-right: 8px;
+    color: #f1f1f1;
   }
 
   &.completed {

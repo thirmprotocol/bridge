@@ -111,7 +111,7 @@ function Deposit() {
     }
 
 
-  }, [tokensList, stepperPosition]);
+  }, [tokensList, stepperPosition, currentStep]);
 
   const handleChange = (prop) => (event) => {
     if (prop === "address") setAddress(event.target.value);
@@ -365,8 +365,11 @@ function Deposit() {
                       color="primary"
                       onClick={approveThirm}
                     >
-                      {processingIndicator && <CircularProgress size={24} color="secondary" />} Approve THIRM
-                        </StyledButton>
+                      {processingIndicator && <><CircularProgress size={24} color="secondary" />Approving..</>}
+                      {!processingIndicator && <>
+                        Approve THIRM</>
+                      }
+                    </StyledButton>
                   </div>
                 </>
               }
@@ -381,9 +384,11 @@ function Deposit() {
                       Back
                           </Button>
                     <StyledButton fullWidth variant="contained" color="primary" onClick={mapCoin}>
-
-                      Map my address
-                        </StyledButton>
+                      {processingIndicator && <><CircularProgress size={24} color="secondary" />Mapping..</>}
+                      {!processingIndicator && <>
+                        Map my address</>
+                      }
+                    </StyledButton>
                   </div>
                 </>
               }

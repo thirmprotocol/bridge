@@ -102,7 +102,7 @@ function Withdraw() {
     }
 
 
-  }, [tokensList, stepperPosition]);
+  }, [tokensList, stepperPosition, currentStep]);
 
   const handleChange = (prop) => (event) => {
     if (prop === "amount") setAmount(event.target.value);
@@ -389,7 +389,10 @@ function Withdraw() {
                       color="primary"
                       onClick={approveCurrentToken}
                     >
-                      {processingIndicator && <CircularProgress size={24} color="secondary" />} Approve {tokensList[asset].name}
+                      {processingIndicator && <><CircularProgress size={24} color="secondary" />Approving..</>}
+                      {!processingIndicator && <>
+                        Approve {tokensList[asset].name}</>
+                      }
                     </StyledButton>
                   </div>
                 </>
