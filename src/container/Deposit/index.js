@@ -53,6 +53,8 @@ function Deposit() {
 
   const [processingIndicator, setProcessingIndicator] = useState(false);
 
+  const [approvedAlready, setApprovedAlready] = useState(false);
+
   const [snackBar, setSnackBar] = useState({
     status: false,
     type: "success",
@@ -87,6 +89,7 @@ function Deposit() {
   }, [coinAddressMapped]);
 
   useEffect(() => {
+    let stale = false;
     const checkWithdrawSteps = async () => {
       try {
 
@@ -95,8 +98,11 @@ function Deposit() {
           const tokenAllowance = await thirmContract.allowance(account, config.MAPPING_CONTRACT_ADDRESS);
 
           const bal = await thirmContract.balanceOf(account);
-          if (!tokenAllowance.eq(0) && tokenAllowance.gte(bal)) {
+          if (!tokenAllowance.eq(0) && tokenAllowance.gte(bal) && !stale) {
+            setApprovedAlready(true)
             setStepperPosition(1);
+          } else {
+            setApprovedAlready(true);
           }
         }
 
@@ -108,6 +114,10 @@ function Deposit() {
     if (tokensList.length > 0) {
       checkWithdrawSteps();
     }
+
+    return () => {
+      stale = true;
+    };
 
 
   }, [tokensList, stepperPosition, currentStep, coinAddressMapped]);
@@ -379,7 +389,7 @@ function Deposit() {
                 index === 1 && <>
                   <div className="button-groups">
                     <Button
-                      disabled={stepperPosition === 0}
+                      disabled={stepperPosition === 0 || approvedAlready}
                       onClick={handleBack}
                     >
                       Back

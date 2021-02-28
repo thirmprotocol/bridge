@@ -53,6 +53,8 @@ function Withdraw() {
 
   const [withDrawComplete, setWithdrawComplete] = useState(false);
 
+  const [approvedAlready, setApprovedAlready] = useState(false);
+
   useEffect(() => {
     let stale = false;
     const getTokensList = async () => {
@@ -77,6 +79,7 @@ function Withdraw() {
   }, [withDrawComplete]);
 
   useEffect(() => {
+    let stale = false;
     const checkWithdrawSteps = async () => {
       try {
 
@@ -87,8 +90,9 @@ function Withdraw() {
 
           const bal = await tokenContract.balanceOf(account);
 
-          if (!tokenAllowance.eq(0) && tokenAllowance.gte(bal)) {
+          if (!tokenAllowance.eq(0) && tokenAllowance.gte(bal) && !stale) {
             setStepperPosition(1);
+            setApprovedAlready(true);
           }
         }
 
@@ -100,6 +104,10 @@ function Withdraw() {
     if (tokensList.length > 0) {
       checkWithdrawSteps();
     }
+
+    return () => {
+      stale = true;
+    };
 
 
   }, [tokensList, stepperPosition, currentStep]);
@@ -404,7 +412,7 @@ function Withdraw() {
                 index === 1 && <>
                   <div className="button-groups">
                     <Button
-                      disabled={stepperPosition === 0}
+                      disabled={stepperPosition === 0 || approvedAlready}
                       onClick={handleBack}
                     >
                       Back
