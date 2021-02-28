@@ -95,7 +95,6 @@ function Deposit() {
           const tokenAllowance = await thirmContract.allowance(account, config.MAPPING_CONTRACT_ADDRESS);
 
           const bal = await thirmContract.balanceOf(account);
-
           if (!tokenAllowance.eq(0) && tokenAllowance.gte(bal)) {
             setStepperPosition(1);
           }

@@ -136,4 +136,7 @@ export const StyledStepper = styled(Stepper)`
   .MuiStepIcon-root.MuiStepIcon-active {
     color: ${bridgeTheme.darkBlue};
   }
+  .MuiStepIcon-root.MuiStepIcon-completed {
+    color: #6ab04c;
+  }
 `;
