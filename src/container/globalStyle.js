@@ -92,6 +92,8 @@ export const MainContentWrapper = styled.div`
   height: 100vh;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
   .list-title {
     font-size: 16px;
     text-align: center;

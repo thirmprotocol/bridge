@@ -5,7 +5,7 @@ export const LogoWrapper = styled.div`
 display: flex;
 flex-direction: row;
 align-items: center;
-justify-content: center;
+justify-content: space;
   img {
     width: 32px;
     height: 32px;
@@ -25,7 +25,8 @@ export const HeaderWrapper = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 36px;
+  margin: 8px 16px;
+  width: 100%;
   height: 80px;
   .account-address {
     margin-left: 8px;

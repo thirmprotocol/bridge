@@ -62,7 +62,7 @@ function HeaderBar() {
         </Link>
         <h3>THIRM BRIDGE</h3>
       </LogoWrapper>
-      <>
+      <div>
         {active && <>
 
           <Button color="primary" onClick={handleClick}>
@@ -136,7 +136,7 @@ function HeaderBar() {
             </Button>
           </>
         }
-      </>
+      </div>
     </HeaderWrapper>
   );
 }

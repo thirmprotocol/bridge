@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 
 export const ConnectWrapper = styled.div`
-  margin: 120px 36px;
+  margin: auto 16px;
   text-align: center;
   .heading-info {
     font-size: 45px;
