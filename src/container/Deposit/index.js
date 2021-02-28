@@ -85,7 +85,7 @@ function Deposit() {
     return () => {
       stale = true;
     };
-  }, []);
+  }, [coinAddressMapped]);
 
   useEffect(() => {
     const checkWithdrawSteps = async () => {

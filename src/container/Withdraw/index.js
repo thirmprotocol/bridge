@@ -74,7 +74,7 @@ function Withdraw() {
     return () => {
       stale = true;
     };
-  }, []);
+  }, [withDrawComplete]);
 
   useEffect(() => {
     const checkWithdrawSteps = async () => {
