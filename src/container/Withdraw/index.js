@@ -305,9 +305,7 @@ function Withdraw() {
               </ListItemSecondaryAction>
             </StyledListItem>
           </StyledList>
-          <StyledButton className="next-button" fullWidth variant="contained" color="primary" onClick={onNext}>
-
-            {/* disabled={!amount || !address || parseFloat(amount) <= 0 || parseFloat(amount) > parseFloat(tokenBal)} */}
+          <StyledButton disabled={!amount || !address || parseFloat(amount) <= 0 || parseFloat(amount) > parseFloat(tokenBal)} className="next-button" fullWidth variant="contained" color="primary" onClick={onNext}>
 
             <span>Next</span>
             <TrendingFlat />
@@ -389,7 +387,7 @@ function Withdraw() {
       {
         currentStep === 4 && <div className="action-area">
           <img src={checkIcon} alt="done" />
-          <p>Withdraw Completed</p>
+          <p className="completed-text">Withdraw Completed</p>
           <GoBackButton color="primary" onClick={onBack}>
             Go Back
           </GoBackButton>

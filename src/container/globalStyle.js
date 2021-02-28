@@ -48,7 +48,6 @@ export const StyledButton = styled(Button)`
     background-image: linear-gradient(225deg, #FF3CAC 0%, #784BA0 50%, #2B86C5 100%);
   }
 
-
 `;
 
 
@@ -155,6 +154,12 @@ export const MainContentWrapper = styled.div`
     }
     button {
       margin-top: 8px;
+    }
+    .completed-text {
+      color: #6ab04c;
+      font-size: 20px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
     }
   }
   
