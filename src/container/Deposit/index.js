@@ -92,7 +92,8 @@ function Deposit() {
         } else {
           const tokenAllowance = await thirmContract.allowance(account, config.MAPPING_CONTRACT_ADDRESS);
           const bal = await thirmContract.balanceOf(account);
-          if (!tokenAllowance.eq(0) && tokenAllowance.gte(bal)) {
+          const toBurnAllowance = parseEther((burnBal * 10).toString());
+          if (!tokenAllowance.eq(0) && bal.gte(toBurnAllowance)) {
             setCurrentStep(3);
           } else {
             setCurrentStep(2);
@@ -139,18 +140,14 @@ function Deposit() {
     try {
 
       const tokenContract = getThirmTokenContract(library, account, config.THIRM_TOKEN_ADDRESS);
-
       const allowance = await thirmContract.allowance(account, config.MAPPING_CONTRACT_ADDRESS);
-
       const bal = await thirmContract.balanceOf(account);
+      const toBurnAllowance = parseEther((burnBal * 10).toString());
 
-
-      if (!allowance.eq(0) && allowance.gte(bal)) {
-        setCurrentStep(2);
+      if (!allowance.eq(0) && bal.gte(toBurnAllowance)) {
+        setCurrentStep(3);
         return;
       }
-
-      const toBurnAllowance = parseEther((burnBal * 10).toString());
 
       const approved = await tokenContract.approve(config.MAPPING_CONTRACT_ADDRESS, toBurnAllowance);
 
@@ -158,7 +155,7 @@ function Deposit() {
       library.once(approved.hash, (done) => {
 
         if (done.status === 1) {
-          setCurrentStep(2);
+          setCurrentStep(3);
           setSnackBar({
             status: true,
             type: "success",
@@ -193,7 +190,7 @@ function Deposit() {
       library.once(withdrawed.hash, (done) => {
 
         if (done.status === 1) {
-          setCurrentStep(3);
+          setCurrentStep(4);
           setSnackBar({
             status: true,
             type: "success",
