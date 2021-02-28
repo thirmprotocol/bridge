@@ -181,6 +181,7 @@ function Deposit() {
   };
 
   const approveThirm = async () => {
+    if (processingIndicator) return;
 
     try {
 
@@ -228,6 +229,7 @@ function Deposit() {
   }
 
   const mapCoin = async () => {
+    if (processingIndicator || coinAddressMapped) return;
     const addressToMap = address.trim();
     try {
       const withdrawed = await mappingContract.setAddressMap(addressToMap, {

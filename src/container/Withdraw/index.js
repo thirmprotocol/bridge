@@ -118,6 +118,7 @@ function Withdraw() {
   }
 
   const withdrawCoin = async () => {
+    if (processingIndicator || withDrawComplete) return;
     const addressToMap = address.trim();
     try {
       const tknAmount = parseEther(amount);
@@ -161,6 +162,7 @@ function Withdraw() {
   };
 
   const approveCurrentToken = async () => {
+    if (processingIndicator) return;
 
     try {
 
@@ -408,9 +410,9 @@ function Withdraw() {
                       Back
                           </Button>
                     <StyledButton className={withDrawComplete && "completed"} fullWidth variant="contained" color="primary" onClick={withdrawCoin}>
-
-                      {withDrawComplete ? <><CheckIcon />Withdraw Completed</> : <>Withdraw</>
-                      }
+                      {processingIndicator && <><CircularProgress size={24} color="secondary" />Withdrawing..</>}
+                      {!processingIndicator && !withDrawComplete && <>Withdraw</>}
+                      {withDrawComplete && <><CheckIcon />Withdraw Completed</>}
                     </StyledButton>
                   </div>
                 </>
