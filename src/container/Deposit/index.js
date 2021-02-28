@@ -282,12 +282,12 @@ function Deposit() {
       </div>
       <StyledInputArea>
         <FormControl variant="outlined" fullWidth >
-          <InputLabel htmlFor="outlined-adornment-address">{tokensList[asset].coin} Address</InputLabel>
+          <InputLabel htmlFor="outlined-adornment-address">Your {tokensList[asset].coin} Address</InputLabel>
           <OutlinedInput
             value={address}
             onChange={handleChange('address')}
             id="outlined-adornment-address"
-            labelWidth={110}
+            labelWidth={160}
           />
         </FormControl>
       </StyledInputArea>

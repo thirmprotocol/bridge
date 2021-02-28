@@ -101,7 +101,7 @@ export const MainContentWrapper = styled.div`
     letter-spacing: 0.02em;
     text-transform: uppercase;
     display: table;
-    margin: 24px auto 0 auto;
+    margin: 36px auto 8px auto;
     padding-bottom: 4px;
     color: ${bridgeTheme.primaryColor};
   }
@@ -118,7 +118,7 @@ export const MainContentWrapper = styled.div`
   }
   .top-bar {
     margin-top: -8px;
-    margin-bottom: -16px;
+    margin-bottom: -24px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;

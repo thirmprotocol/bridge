@@ -240,6 +240,18 @@ function Withdraw() {
       </div>
       <StyledInputArea>
         <FormControl variant="outlined" fullWidth>
+          <InputLabel htmlFor="outlined-adornment-amount">Your {tokensList[asset].coin} Address</InputLabel>
+          <OutlinedInput
+            value={address}
+            onChange={handleChange('address')}
+            aria-describedby="outlined-amount-helper-text"
+            labelWidth={160}
+            id="outlined-adornment-address"
+          />
+        </FormControl>
+      </StyledInputArea>
+      <StyledInputArea>
+        <FormControl variant="outlined" fullWidth>
           <InputLabel htmlFor="outlined-adornment-amount">Amount</InputLabel>
           <OutlinedInput
             value={amount}
@@ -255,24 +267,11 @@ function Withdraw() {
                 <InputAdornment position="end">{tokensList[asset].name}</InputAdornment>
               </>}
             id="outlined-adornment-amount"
-            labelWidth={60}
+            labelWidth={70}
             type="number"
           />
         </FormControl>
       </StyledInputArea>
-      <StyledInputArea>
-        <FormControl variant="outlined" fullWidth>
-          <InputLabel htmlFor="outlined-adornment-amount">Destination {tokensList[asset].coin} Address</InputLabel>
-          <OutlinedInput
-            value={address}
-            onChange={handleChange('address')}
-            aria-describedby="outlined-amount-helper-text"
-            labelWidth={200}
-            id="outlined-adornment-address"
-          />
-        </FormControl>
-      </StyledInputArea>
-
       <StyledList>
         <StyledListItem>
           <ListItemText primary="Asset" />
