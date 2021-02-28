@@ -301,12 +301,11 @@ function Withdraw() {
             <StyledListItem>
               <ListItemText primary="You will Receive" />
               <ListItemSecondaryAction>
-                <p>{tokensList[asset].coin}</p>
+                {parseFloat(0.999 * amount).toFixed(8)} {tokensList[asset].coin}
               </ListItemSecondaryAction>
             </StyledListItem>
           </StyledList>
           <StyledButton disabled={!amount || !address || parseFloat(amount) <= 0 || parseFloat(amount) > parseFloat(tokenBal)} className="next-button" fullWidth variant="contained" color="primary" onClick={onNext}>
-
             <span>Next</span>
             <TrendingFlat />
           </StyledButton>
@@ -341,7 +340,7 @@ function Withdraw() {
             <StyledListItem>
               <ListItemText primary="You will Receive" />
               <ListItemSecondaryAction>
-                {tokensList[asset].coin}
+                {parseFloat(0.999 * amount).toFixed(8)} {tokensList[asset].coin}
               </ListItemSecondaryAction>
             </StyledListItem>
           </StyledList>
