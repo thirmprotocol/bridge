@@ -397,7 +397,7 @@ function Deposit() {
                     <StyledButton fullWidth variant="contained" color="primary" onClick={mapCoin}>
                       {processingIndicator && <><CircularProgress size={24} color="secondary" />Mapping..</>}
                       {!processingIndicator && <>
-                        Map my address</>
+                        Map {tokensList[asset].coin} address</>
                       }
                     </StyledButton>
                   </div>
@@ -460,7 +460,7 @@ function Deposit() {
         </StyledListItem>
       </StyledList>
       <StyledButton className="next-button" fullWidth variant="contained" color="primary" onClick={openDepositDialog}>
-        Deposit
+        Deposit {tokensList[asset].coin}
       </StyledButton>
 
       <Dialog

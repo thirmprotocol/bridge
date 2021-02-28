@@ -418,7 +418,7 @@ function Withdraw() {
                           </Button>
                     <StyledButton className={withDrawComplete && "completed"} fullWidth variant="contained" color="primary" onClick={withdrawCoin}>
                       {processingIndicator && <><CircularProgress size={24} color="secondary" />Withdrawing..</>}
-                      {!processingIndicator && !withDrawComplete && <>Withdraw</>}
+                      {!processingIndicator && !withDrawComplete && <>Withdraw {tokensList[asset].coin}</>}
                       {withDrawComplete && <><CheckIcon />Withdraw Completed</>}
                     </StyledButton>
                   </div>
