@@ -1,11 +1,6 @@
 import styled from 'styled-components';
 
 export const WithdrawWrapper = styled.div`
-  .button-groups {
-    button {
-      margin: 8px 0;
-    }
-  }
   position: relative;
   min-height: 470px;
   padding: 0;

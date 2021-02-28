@@ -53,8 +53,6 @@ function Deposit() {
 
   const [processingIndicator, setProcessingIndicator] = useState(false);
 
-  const [approvedAlready, setApprovedAlready] = useState(false);
-
   const [snackBar, setSnackBar] = useState({
     status: false,
     type: "success",
@@ -99,10 +97,7 @@ function Deposit() {
 
           const bal = await thirmContract.balanceOf(account);
           if (!tokenAllowance.eq(0) && tokenAllowance.gte(bal) && !stale) {
-            setApprovedAlready(true)
             setStepperPosition(1);
-          } else {
-            setApprovedAlready(true);
           }
         }
 
@@ -162,10 +157,6 @@ function Deposit() {
       prevStep - 1
     );
   }
-
-  const handleBack = () => {
-    setStepperPosition((prevActiveStep) => prevActiveStep - 1);
-  };
 
   const [openDialog, setOpenDialog] = React.useState(false);
 
@@ -363,44 +354,28 @@ function Deposit() {
             <StepContent>
               {
                 index === 0 && <>
-                  <div className="button-groups">
-                    <Button
-                      disabled={stepperPosition === 0}
-                      onClick={handleBack}
-                    >
-                      Back
-                    </Button>
-                    <StyledButton
-                      fullWidth
-                      variant="contained"
-                      color="primary"
-                      onClick={approveThirm}
-                    >
-                      {processingIndicator && <><CircularProgress size={24} color="secondary" />Approving..</>}
-                      {!processingIndicator && <>
-                        Approve THIRM</>
-                      }
-                    </StyledButton>
-                  </div>
+                  <StyledButton
+                    fullWidth
+                    variant="contained"
+                    color="primary"
+                    onClick={approveThirm}
+                  >
+                    {processingIndicator && <><CircularProgress size={24} color="secondary" />Approving..</>}
+                    {!processingIndicator && <>
+                      Approve THIRM</>
+                    }
+                  </StyledButton>
                 </>
               }
 
               {
                 index === 1 && <>
-                  <div className="button-groups">
-                    <Button
-                      disabled={stepperPosition === 0 || approvedAlready}
-                      onClick={handleBack}
-                    >
-                      Back
-                          </Button>
-                    <StyledButton fullWidth variant="contained" color="primary" onClick={mapCoin}>
-                      {processingIndicator && <><CircularProgress size={24} color="secondary" />Mapping..</>}
-                      {!processingIndicator && <>
-                        Map {tokensList[asset].coin} address</>
-                      }
-                    </StyledButton>
-                  </div>
+                  <StyledButton fullWidth variant="contained" color="primary" onClick={mapCoin}>
+                    {processingIndicator && <><CircularProgress size={24} color="secondary" />Mapping..</>}
+                    {!processingIndicator && <>
+                      Map {tokensList[asset].coin} address</>
+                    }
+                  </StyledButton>
                 </>
               }
             </StepContent>

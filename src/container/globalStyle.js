@@ -139,4 +139,7 @@ export const StyledStepper = styled(Stepper)`
   .MuiStepIcon-root.MuiStepIcon-completed {
     color: #6ab04c;
   }
+  button {
+    margin: 36px 0 24px 0;
+  }
 `;

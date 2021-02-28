@@ -53,8 +53,6 @@ function Withdraw() {
 
   const [withDrawComplete, setWithdrawComplete] = useState(false);
 
-  const [approvedAlready, setApprovedAlready] = useState(false);
-
   useEffect(() => {
     let stale = false;
     const getTokensList = async () => {
@@ -92,7 +90,6 @@ function Withdraw() {
 
           if (!tokenAllowance.eq(0) && tokenAllowance.gte(bal) && !stale) {
             setStepperPosition(1);
-            setApprovedAlready(true);
           }
         }
 
@@ -165,11 +162,7 @@ function Withdraw() {
     );
   }
 
-  const handleBack = () => {
-    setStepperPosition((prevActiveStep) => prevActiveStep - 1);
-  };
-
-  const approveCurrentToken = async () => {
+   const approveCurrentToken = async () => {
     if (processingIndicator) return;
 
     try {
@@ -385,43 +378,27 @@ function Withdraw() {
             <StepContent>
               {
                 index === 0 && <>
-                  <div className="button-groups">
-                    <Button
-                      disabled={stepperPosition === 0}
-                      onClick={handleBack}
-                    >
-                      Back
-                    </Button>
-                    <StyledButton
-                      fullWidth
-                      variant="contained"
-                      color="primary"
-                      onClick={approveCurrentToken}
-                    >
-                      {processingIndicator && <><CircularProgress size={24} color="secondary" />Approving..</>}
-                      {!processingIndicator && <>
-                        Approve {tokensList[asset].name}</>
-                      }
-                    </StyledButton>
-                  </div>
+                  <StyledButton
+                    fullWidth
+                    variant="contained"
+                    color="primary"
+                    onClick={approveCurrentToken}
+                  >
+                    {processingIndicator && <><CircularProgress size={24} color="secondary" />Approving..</>}
+                    {!processingIndicator && <>
+                      Approve {tokensList[asset].name}</>
+                    }
+                  </StyledButton>
                 </>
               }
 
               {
                 index === 1 && <>
-                  <div className="button-groups">
-                    <Button
-                      disabled={stepperPosition === 0 || approvedAlready}
-                      onClick={handleBack}
-                    >
-                      Back
-                          </Button>
-                    <StyledButton className={withDrawComplete && "completed"} fullWidth variant="contained" color="primary" onClick={withdrawCoin}>
-                      {processingIndicator && <><CircularProgress size={24} color="secondary" />Withdrawing..</>}
-                      {!processingIndicator && !withDrawComplete && <>Withdraw {tokensList[asset].coin}</>}
-                      {withDrawComplete && <><CheckIcon />Withdraw Completed</>}
-                    </StyledButton>
-                  </div>
+                  <StyledButton className={withDrawComplete && "completed"} fullWidth variant="contained" color="primary" onClick={withdrawCoin}>
+                    {processingIndicator && <><CircularProgress size={24} color="secondary" />Withdrawing..</>}
+                    {!processingIndicator && !withDrawComplete && <>Withdraw {tokensList[asset].coin}</>}
+                    {withDrawComplete && <><CheckIcon />Withdraw Completed</>}
+                  </StyledButton>
                 </>
               }
             </StepContent>
