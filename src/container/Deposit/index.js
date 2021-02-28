@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
-import { Avatar, CircularProgress, FormControl, Grid, InputLabel, ListItemSecondaryAction, ListItemText, MenuItem, OutlinedInput, Select, Snackbar, Typography } from '@material-ui/core';
+import { Avatar, CircularProgress, FormControl, Grid, InputAdornment, InputLabel, ListItemSecondaryAction, ListItemText, MenuItem, OutlinedInput, Select, Snackbar, Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import { KeyboardArrowLeft, TrendingFlat } from '@material-ui/icons';
 import Alert from '@material-ui/lab/Alert';
@@ -233,6 +233,19 @@ function Deposit() {
               onChange={handleChange('address')}
               id="outlined-adornment-address"
               labelWidth={160}
+              endAdornment={
+                <>
+                  <InputAdornment position='end'>
+                    <Button
+                      onClick={() => {
+                        if (navigator.clipboard) {
+                          navigator.clipboard.readText().then(text => setAddress(text));
+                        }
+                      }}>
+                      Paste
+                  </Button>
+                  </InputAdornment>
+                </>}
             />
           </FormControl>
         </StyledInputArea>
