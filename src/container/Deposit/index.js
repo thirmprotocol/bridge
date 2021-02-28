@@ -326,7 +326,7 @@ function Deposit() {
           </StyledListItem>
         </StyledList>
         <StyledButton className="next-button" fullWidth variant="contained" color="primary" onClick={onNext}>
-          Next
+          <span>Next</span>
           <TrendingFlat />
         </StyledButton>
       </>
