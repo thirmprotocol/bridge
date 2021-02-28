@@ -374,12 +374,12 @@ function Withdraw() {
         currentStep === 3 && <>
           <div className="action-area">
             <img src={tokensList[asset].image} alt={tokensList[asset].name} />
-            <p>Withdraw {tokensList[asset].coin}</p>
+            <p>Withdraw {amount} {tokensList[asset].name}</p>
           </div>
 
           <StyledButton className={`next-button ${processingIndicator && "processing"}`} fullWidth variant="contained" color="primary" onClick={withdrawCoin}>
             {processingIndicator && <><CircularProgress size={24} color="secondary" />Withdrawing..</>}
-            {!processingIndicator && <>Withdraw {tokensList[asset].coin}</>}
+            {!processingIndicator && <>Withdraw {tokensList[asset].name}</>}
           </StyledButton>
         </>
       }
