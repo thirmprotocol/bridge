@@ -14,11 +14,10 @@ import {
 } from 'recoil';
 import { useMappingContract, useThirmContract } from '../../hooks';
 import { formatAddress } from '../../utils';
-import { StyledStepper } from '../Withdraw/style';
 import config from './../../utils/config/index';
 import { getThirmTokenContract } from './../../utils/index';
 import { addressState, assetState } from './../../utils/recoilState';
-import { bridgeTheme, GoBackButton, StyledButton, StyledInputArea, StyledList, StyledListItem } from './../globalStyle';
+import { bridgeTheme, GoBackButton, StyledButton, StyledInputArea, StyledList, StyledListItem, StyledStepper } from './../globalStyle';
 import { DepositWrapper } from './style';
 
 

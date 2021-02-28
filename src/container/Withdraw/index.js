@@ -15,8 +15,8 @@ import { useControllerContract } from './../../hooks/index';
 import config from './../../utils/config/index';
 import { formatAddress, getThirmTokenContract } from './../../utils/index';
 import { addressState, amountState, assetState } from './../../utils/recoilState';
-import { GoBackButton, StyledButton, StyledInputArea, StyledList, StyledListItem } from './../globalStyle';
-import { StyledStepper, WithdrawWrapper } from './style';
+import { GoBackButton, StyledButton, StyledInputArea, StyledList, StyledListItem, StyledStepper } from './../globalStyle';
+import { WithdrawWrapper } from './style';
 
 const ALLOWANCE_LIMIT = ethers.BigNumber.from("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
 

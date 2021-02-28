@@ -1,11 +1,12 @@
-import { List, ListItem } from '@material-ui/core';
+import { List, ListItem, Stepper } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import styled from 'styled-components';
 
 
 export const bridgeTheme = {
   primaryColor: "#0652DD",
-  secondaryColor: "#e74c3c"
+  secondaryColor: "#e74c3c",
+  darkBlue: "#30336b"
 };
 
 export const StyledButton = styled(Button)`
@@ -125,4 +126,11 @@ export const MainContentWrapper = styled.div`
 export const GoBackButton = styled(Button)`
   margin-bottom: 16px;
   color: #555;
+`;
+
+export const StyledStepper = styled(Stepper)`
+  margin: 24px 0;
+  .MuiStepIcon-root.MuiStepIcon-active {
+    color: ${bridgeTheme.darkBlue};
+  }
 `;
