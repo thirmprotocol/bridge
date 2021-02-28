@@ -72,14 +72,6 @@ export const StyledList = styled(List)`
   border: 1px solid #e3e3e3;
   padding: 8px 0;
   border-radius: 5px;
-  @media screen and (max-width: 325px) {
-    font-size: 0.75rem;
-  }
-
-  @media screen and (max-width: 375px) and (min-width: 325px) {
-    font-size: 0.9rem;
-  }
-
 `;
 
 export const StyledInputArea = styled.div`
@@ -152,6 +144,21 @@ export const MainContentWrapper = styled.div`
       padding: 8px;
       margin-bottom: 16px;
     }
+    .qr-wrapper-small {
+      display: none;
+      margin-top: 36px;
+      padding: 8px;
+      margin-bottom: 16px;
+    }
+    @media screen and (max-width: 375px) {
+      .qr-wrapper {
+        display: none;
+      }
+      .qr-wrapper-small {
+        display: block;
+      }
+    }
+
     button {
       margin-top: 8px;
     }

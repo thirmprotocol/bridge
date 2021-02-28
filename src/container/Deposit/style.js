@@ -11,4 +11,7 @@ export const DepositWrapper = styled.div`
     width: 100%;
     margin: 0;
   }
+  @media screen and (max-width: 375px) {
+    min-height: 420px;
+  }
 `;

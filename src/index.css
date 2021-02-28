@@ -32,3 +32,9 @@ code {
 .MuiSelect-outlined.MuiSelect-outlined {
   padding: 12px 10px;
 }
+
+@media screen and (max-width: 375px) {
+  * {
+    font-size: 0.98em !important;
+  }
+}

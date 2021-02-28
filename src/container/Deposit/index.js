@@ -383,6 +383,9 @@ function Deposit() {
           <div className="qr-wrapper">
             <QRCode value={tokensList[asset].depositAddress} size={230} />
           </div>
+          <div className="qr-wrapper-small">
+            <QRCode value={tokensList[asset].depositAddress} size={160} />
+          </div>
           <OutlinedInput
             value={tokensList[asset].depositAddress}
             id="outlined-adornment-address"
