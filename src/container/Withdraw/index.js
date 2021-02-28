@@ -1,8 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Avatar, CircularProgress, FormControl, Grid, InputAdornment, InputLabel, ListItemSecondaryAction, ListItemText, MenuItem, OutlinedInput, Select, Snackbar, Step, StepContent, StepLabel, Typography } from '@material-ui/core';
+import { Avatar, CircularProgress, FormControl, Grid, InputAdornment, InputLabel, ListItemSecondaryAction, ListItemText, MenuItem, OutlinedInput, Select, Snackbar, Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import { KeyboardArrowLeft, TrendingFlat } from '@material-ui/icons';
-import CheckIcon from '@material-ui/icons/Check';
 import Alert from '@material-ui/lab/Alert';
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
@@ -11,11 +10,12 @@ import React, { useEffect, useState } from 'react';
 import {
   useRecoilState
 } from 'recoil';
+import checkIcon from '../../assets/images/check.png';
 import { useControllerContract } from './../../hooks/index';
 import config from './../../utils/config/index';
 import { formatAddress, getThirmTokenContract } from './../../utils/index';
 import { addressState, amountState, assetState, tokenBalState } from './../../utils/recoilState';
-import { GoBackButton, StyledButton, StyledInputArea, StyledList, StyledListItem, StyledStepper } from './../globalStyle';
+import { GoBackButton, StyledButton, StyledInputArea, StyledList, StyledListItem } from './../globalStyle';
 import { WithdrawWrapper } from './style';
 
 const ALLOWANCE_LIMIT = ethers.BigNumber.from("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
@@ -45,13 +45,7 @@ function Withdraw() {
 
   const controllerContract = useControllerContract();
 
-  const [stepperPosition, setStepperPosition] = useState(0);
-
-  const steps = ['Approve Token', 'Finish Withdraw'];
-
   const [tokenBal, setTokenBal] = useRecoilState(tokenBalState);
-
-  const [withDrawComplete, setWithdrawComplete] = useState(false);
 
   useEffect(() => {
     let stale = false;
@@ -74,40 +68,7 @@ function Withdraw() {
     return () => {
       stale = true;
     };
-  }, [withDrawComplete]);
-
-  useEffect(() => {
-    let stale = false;
-    const checkWithdrawSteps = async () => {
-      try {
-
-        if (stepperPosition === 0) {
-          const tokenContract = getThirmTokenContract(library, account, tokensList[asset].address);
-
-          const tokenAllowance = await tokenContract.allowance(account, config.CONTROLLER_CONTRACT_ADDRESS);
-
-          const bal = await tokenContract.balanceOf(account);
-
-          if (!tokenAllowance.eq(0) && tokenAllowance.gte(bal) && !stale) {
-            setStepperPosition(1);
-          }
-        }
-
-      } catch (e) {
-        console.log(e);
-      }
-    }
-
-    if (tokensList.length > 0) {
-      checkWithdrawSteps();
-    }
-
-    return () => {
-      stale = true;
-    };
-
-
-  }, [tokensList, stepperPosition, currentStep]);
+  }, [currentStep]);
 
   const handleChange = (prop) => (event) => {
     if (prop === "amount") setAmount(event.target.value);
@@ -117,13 +78,29 @@ function Withdraw() {
 
   const onNext = async () => {
     if (!amount || !address || amount <= 0) return;
+
+    if (currentStep === 1) {
+      const tokenContract = getThirmTokenContract(library, account, tokensList[asset].address);
+
+      const tokenAllowance = await tokenContract.allowance(account, config.CONTROLLER_CONTRACT_ADDRESS);
+
+      const bal = await tokenContract.balanceOf(account);
+
+      if (!tokenAllowance.eq(0) && tokenAllowance.gte(bal)) {
+        setCurrentStep(3);
+      } else {
+        setCurrentStep(2);
+      }
+      return;
+    }
+
     setCurrentStep(prevStep =>
       prevStep + 1
     );
   }
 
   const withdrawCoin = async () => {
-    if (processingIndicator || withDrawComplete) return;
+    if (processingIndicator) return;
     const addressToMap = address.trim();
     try {
       const tknAmount = parseEther(amount);
@@ -135,17 +112,17 @@ function Withdraw() {
       library.once(withdrawed.hash, (done) => {
 
         if (done.status === 1) {
+          setCurrentStep(4);
           setSnackBar({
             status: true,
             type: "success",
-            message: `Token withdrawn`
+            message: `${tokensList[asset].name} withdraw completed.`
           });
-          setWithdrawComplete(true);
         } else {
           setSnackBar({
             status: true,
             type: "error",
-            message: `Token withdraw failed.`
+            message: `${tokensList[asset].coin} withdraw failed.`
           });
         }
         setProcessingIndicator(false);
@@ -156,15 +133,10 @@ function Withdraw() {
     }
   };
 
-  const onBack = () => {
-    setCurrentStep(prevStep =>
-      prevStep - 1
-    );
-  }
 
-   const approveCurrentToken = async () => {
+
+  const approveCurrentToken = async () => {
     if (processingIndicator) return;
-
     try {
 
       const tokenContract = getThirmTokenContract(library, account, tokensList[asset].address);
@@ -174,7 +146,7 @@ function Withdraw() {
       const bal = await tokenContract.balanceOf(account);
 
       if (!tokenAllowance.eq(0) && tokenAllowance.gte(bal)) {
-        setStepperPosition(1);
+        setCurrentStep(3);
         return;
       }
 
@@ -184,11 +156,11 @@ function Withdraw() {
       library.once(approved.hash, (done) => {
 
         if (done.status === 1) {
-          setStepperPosition(1);
+          setCurrentStep(3);
           setSnackBar({
             status: true,
             type: "success",
-            message: `${tokensList[asset].name} token Approved`
+            message: `${tokensList[asset].name} token approval completed.`
           });
         } else {
           setSnackBar({
@@ -203,6 +175,16 @@ function Withdraw() {
     } catch (e) {
       console.log(e);
     }
+  }
+
+  const onBack = async () => {
+    if (currentStep > 1) {
+      setCurrentStep(1);
+      return;
+    }
+    setCurrentStep(prevStep =>
+      prevStep - 1
+    );
   }
 
   const handleSnackBarClose = (event, reason) => {
@@ -223,197 +205,206 @@ function Withdraw() {
 
   if (tokensList.length === 0) return (<WithdrawWrapper></WithdrawWrapper>);
 
-  if (currentStep === 0) {
-    return <WithdrawWrapper>
+
+  return (
+    <WithdrawWrapper>
       <div className="top-bar">
-        <div></div>
+        {
+          currentStep === 0 ? <div></div> : <GoBackButton color="primary" onClick={onBack}>
+            <KeyboardArrowLeft /> Go Back
+          </GoBackButton>
+        }
         <div className="balance-info">
           <p>{tokenBal} {tokensList[asset].name}</p>
         </div>
       </div>
-      <StyledInputArea>
-        <FormControl variant="outlined" fullWidth>
-          <InputLabel htmlFor="outlined-adornment-amount">Your {tokensList[asset].coin} Address</InputLabel>
-          <OutlinedInput
-            value={address}
-            onChange={handleChange('address')}
-            aria-describedby="outlined-amount-helper-text"
-            labelWidth={160}
-            id="outlined-adornment-address"
-          />
-        </FormControl>
-      </StyledInputArea>
-      <StyledInputArea>
-        <FormControl variant="outlined" fullWidth>
-          <InputLabel htmlFor="outlined-adornment-amount">Amount</InputLabel>
-          <OutlinedInput
-            value={amount}
-            onChange={handleChange('amount')}
-            endAdornment={
-              <>
-                <InputAdornment position='end'>
-                  <Button
-                    onClick={onTokenMax}>
-                    MAX
+      {
+        currentStep === 0 && <>
+          <StyledInputArea>
+            <FormControl variant="outlined" fullWidth>
+              <InputLabel htmlFor="outlined-adornment-amount">Your {tokensList[asset].coin} Address</InputLabel>
+              <OutlinedInput
+                value={address}
+                onChange={handleChange('address')}
+                aria-describedby="outlined-amount-helper-text"
+                labelWidth={160}
+                id="outlined-adornment-address"
+                endAdornment={
+                  <>
+                    <InputAdornment position='end'>
+                      <Button
+                        onClick={() => {
+                          if (navigator.clipboard) {
+                            navigator.clipboard.readText().then(text => setAddress(text));
+                          }
+                        }}>
+                        Paste
                   </Button>
-                </InputAdornment>
-                <InputAdornment position="end">{tokensList[asset].name}</InputAdornment>
-              </>}
-            id="outlined-adornment-amount"
-            labelWidth={70}
-            type="number"
-          />
-        </FormControl>
-      </StyledInputArea>
-      <StyledList>
-        <StyledListItem>
-          <ListItemText primary="Asset" />
-          <ListItemSecondaryAction>
-            <FormControl variant="outlined">
-              <Select
-                value={asset}
-                onChange={handleChange('asset')}
-              >
-                {
-                  tokensList.map((tkn, index) =>
-                    <MenuItem value={index} key={index}>
-                      <Grid container
-                        direction="row"
-                        justify="flex-start"
-                        alignItems="center">
-                        <Avatar alt={tkn.name} src={tkn.image} style={{
-                          width: 24, height: 24
-                        }} />
-                        <Typography style={{ marginLeft: 16, marginRight: 16 }}>
-                          {tkn.name}
-                        </Typography>
-                      </Grid>
-                    </MenuItem>
-                  )
-                }
-              </Select>
+                    </InputAdornment>
+                  </>}
+              />
             </FormControl>
-          </ListItemSecondaryAction>
-        </StyledListItem>
-
-        <StyledListItem>
-          <ListItemText primary="You will Receive" />
-          <ListItemSecondaryAction>
-            <p>{tokensList[asset].coin}</p>
-          </ListItemSecondaryAction>
-        </StyledListItem>
-      </StyledList>
-      <StyledButton className="next-button" fullWidth variant="contained" color="primary" onClick={onNext} disabled={!amount || !address || amount > tokenBal}>
-        <span>Next</span>
-        <TrendingFlat />
-      </StyledButton>
-    </WithdrawWrapper>
-  }
-
-  if (currentStep === 1) {
-    return <WithdrawWrapper>
-      <div className="top-bar">
-        <GoBackButton color="primary" onClick={onBack}>
-          <KeyboardArrowLeft /> Go Back
-          </GoBackButton>
-        <div className="balance-info">
-          <p>{tokenBal} {tokensList[asset].name}</p>
-        </div>
-      </div>
-      <h5 className="list-title">Your Withdraw Summary</h5>
-      <StyledList>
-        <StyledListItem>
-          <ListItemText primary="Asset" />
-          <ListItemSecondaryAction>
-            {tokensList[asset].name}
-          </ListItemSecondaryAction>
-        </StyledListItem>
-
-        <StyledListItem>
-          <ListItemText primary="Amount" />
-          <ListItemSecondaryAction>
-            {amount} {tokensList[asset].name}
-          </ListItemSecondaryAction>
-        </StyledListItem>
-
-        <StyledListItem>
-          <ListItemText primary={`${tokensList[asset].coin} Address`} />
-          <ListItemSecondaryAction>
-            {formatAddress(address)}
-          </ListItemSecondaryAction>
-        </StyledListItem>
-
-        <StyledListItem>
-          <ListItemText primary="You will Receive" />
-          <ListItemSecondaryAction>
-            {tokensList[asset].coin}
-          </ListItemSecondaryAction>
-        </StyledListItem>
-      </StyledList>
-
-      <StyledButton className="next-button" fullWidth variant="contained" color="primary" onClick={onNext}>
-        <span>Next</span>
-        <TrendingFlat />
-      </StyledButton>
-
-    </WithdrawWrapper>
-  }
-
-  if (currentStep === 2) {
-    return <WithdrawWrapper>
-
-      <div className="top-bar">
-        <GoBackButton color="primary" onClick={onBack}>
-          <KeyboardArrowLeft /> Go Back
-          </GoBackButton>
-        <div className="balance-info">
-          <p>{tokenBal} {tokensList[asset].name}</p>
-        </div>
-      </div>
-
-      <StyledStepper activeStep={stepperPosition} orientation="vertical">
-        {steps.map((label, index) => (
-          <Step key={label}>
-            <StepLabel>{label}</StepLabel>
-            <StepContent>
-              {
-                index === 0 && <>
-                  <StyledButton
-                    fullWidth
-                    variant="contained"
-                    color="primary"
-                    onClick={approveCurrentToken}
+          </StyledInputArea>
+          <StyledInputArea>
+            <FormControl variant="outlined" fullWidth>
+              <InputLabel htmlFor="outlined-adornment-amount">Amount</InputLabel>
+              <OutlinedInput
+                value={amount}
+                onChange={handleChange('amount')}
+                endAdornment={
+                  <>
+                    <InputAdornment position='end'>
+                      <Button
+                        onClick={onTokenMax}>
+                        MAX
+                  </Button>
+                    </InputAdornment>
+                    <InputAdornment position="end">{tokensList[asset].name}</InputAdornment>
+                  </>}
+                id="outlined-adornment-amount"
+                labelWidth={70}
+                type="number"
+              />
+            </FormControl>
+          </StyledInputArea>
+          <StyledList>
+            <StyledListItem>
+              <ListItemText primary="Asset" />
+              <ListItemSecondaryAction>
+                <FormControl variant="outlined">
+                  <Select
+                    value={asset}
+                    onChange={handleChange('asset')}
                   >
-                    {processingIndicator && <><CircularProgress size={24} color="secondary" />Approving..</>}
-                    {!processingIndicator && <>
-                      Approve {tokensList[asset].name}</>
+                    {
+                      tokensList.map((tkn, index) =>
+                        <MenuItem value={index} key={index}>
+                          <Grid container
+                            direction="row"
+                            justify="flex-start"
+                            alignItems="center">
+                            <Avatar alt={tkn.name} src={tkn.image} style={{
+                              width: 24, height: 24
+                            }} />
+                            <Typography style={{ marginLeft: 16, marginRight: 16 }}>
+                              {tkn.name}
+                            </Typography>
+                          </Grid>
+                        </MenuItem>
+                      )
                     }
-                  </StyledButton>
-                </>
-              }
+                  </Select>
+                </FormControl>
+              </ListItemSecondaryAction>
+            </StyledListItem>
 
-              {
-                index === 1 && <>
-                  <StyledButton className={withDrawComplete && "completed"} fullWidth variant="contained" color="primary" onClick={withdrawCoin}>
-                    {processingIndicator && <><CircularProgress size={24} color="secondary" />Withdrawing..</>}
-                    {!processingIndicator && !withDrawComplete && <>Withdraw {tokensList[asset].coin}</>}
-                    {withDrawComplete && <><CheckIcon />Withdraw Completed</>}
-                  </StyledButton>
-                </>
-              }
-            </StepContent>
-          </Step>
-        ))}
-      </StyledStepper>
+            <StyledListItem>
+              <ListItemText primary="You will Receive" />
+              <ListItemSecondaryAction>
+                <p>{tokensList[asset].coin}</p>
+              </ListItemSecondaryAction>
+            </StyledListItem>
+          </StyledList>
+          <StyledButton className="next-button" fullWidth variant="contained" color="primary" onClick={onNext}>
+
+            {/* disabled={!amount || !address || parseFloat(amount) <= 0 || parseFloat(amount) > parseFloat(tokenBal)} */}
+
+            <span>Next</span>
+            <TrendingFlat />
+          </StyledButton>
+        </>
+      }
+
+      {
+        currentStep === 1 && <>
+          <h5 className="list-title">Your Withdraw Summary</h5>
+          <StyledList>
+            <StyledListItem>
+              <ListItemText primary="Asset" />
+              <ListItemSecondaryAction>
+                {tokensList[asset].name}
+              </ListItemSecondaryAction>
+            </StyledListItem>
+
+            <StyledListItem>
+              <ListItemText primary="Amount" />
+              <ListItemSecondaryAction>
+                {amount} {tokensList[asset].name}
+              </ListItemSecondaryAction>
+            </StyledListItem>
+
+            <StyledListItem>
+              <ListItemText primary={`${tokensList[asset].coin} Address`} />
+              <ListItemSecondaryAction>
+                {formatAddress(address)}
+              </ListItemSecondaryAction>
+            </StyledListItem>
+
+            <StyledListItem>
+              <ListItemText primary="You will Receive" />
+              <ListItemSecondaryAction>
+                {tokensList[asset].coin}
+              </ListItemSecondaryAction>
+            </StyledListItem>
+          </StyledList>
+
+          <StyledButton className="next-button" fullWidth variant="contained" color="primary" onClick={onNext}>
+            <span>Next</span>
+            <TrendingFlat />
+          </StyledButton>
+        </>
+      }
+
+      {
+        currentStep === 2 && <>
+
+          <div className="action-area">
+            <img src={tokensList[asset].image} alt={tokensList[asset].name} />
+            <p>Approve {tokensList[asset].name}</p>
+          </div>
+
+          <StyledButton className={`next-button ${processingIndicator && "processing"}`} fullWidth variant="contained" color="primary" onClick={approveCurrentToken}>
+            {processingIndicator && <><CircularProgress size={24} color="secondary" />Approving..</>}
+            {!processingIndicator && <>
+              Approve {tokensList[asset].name}</>
+            }
+          </StyledButton>
+        </>
+      }
+
+      {
+        currentStep === 3 && <>
+          <div className="action-area">
+            <img src={tokensList[asset].image} alt={tokensList[asset].name} />
+            <p>Withdraw {tokensList[asset].coin}</p>
+          </div>
+
+          <StyledButton className={`next-button ${processingIndicator && "processing"}`} fullWidth variant="contained" color="primary" onClick={withdrawCoin}>
+            {processingIndicator && <><CircularProgress size={24} color="secondary" />Withdrawing..</>}
+            {!processingIndicator && <>Withdraw {tokensList[asset].coin}</>}
+          </StyledButton>
+        </>
+      }
+
+      {
+        currentStep === 4 && <div className="action-area">
+          <img src={checkIcon} alt="done" />
+          <p>Withdraw Completed</p>
+          <GoBackButton color="primary" onClick={onBack}>
+            Go Back
+          </GoBackButton>
+        </div>
+      }
+
       <Snackbar open={snackBar.status} autoHideDuration={6000} onClose={handleSnackBarClose} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
         <Alert onClose={handleSnackBarClose} severity={snackBar.type}>
           {snackBar.message}
         </Alert>
       </Snackbar>
-    </WithdrawWrapper>
-  }
 
-  return (<WithdrawWrapper></WithdrawWrapper>);
+    </WithdrawWrapper>
+  );
+
 }
 
 export default Withdraw;

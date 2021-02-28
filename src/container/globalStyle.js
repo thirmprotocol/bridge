@@ -43,10 +43,12 @@ export const StyledButton = styled(Button)`
     color: #f1f1f1;
   }
 
-  &.completed {
-    background-image: none;
-    background-color: #6ab04c;
+  &.processing {
+    background-color: #FF3CAC;
+    background-image: linear-gradient(225deg, #FF3CAC 0%, #784BA0 50%, #2B86C5 100%);
   }
+
+
 `;
 
 
@@ -124,6 +126,38 @@ export const MainContentWrapper = styled.div`
     justify-content: space-between;
     align-items: center;
   }
+
+  .action-area {
+    padding: 36px 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 300px;
+    
+    img {
+      width: 120px;
+      height: 120px;
+      padding: 16px;
+    }
+    p {
+      font-size: 18px;
+      text-transform: uppercase;
+    }
+
+    .MuiAlert-root {
+      font-size: 14px;
+    }
+    .qr-wrapper {
+      margin-top: 48px;
+      padding: 8px;
+      margin-bottom: 16px;
+    }
+    button {
+      margin-top: 8px;
+    }
+  }
+  
 `;
 
 export const GoBackButton = styled(Button)`
