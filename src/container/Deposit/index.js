@@ -58,7 +58,7 @@ function Deposit() {
       }
 
       const bal = await thirmContract.balanceOf(account);
-      const tokenBal = parseFloat(formatEther(bal)).toFixed(8);
+      const tokenBal = formatEther(bal);
 
       if (!stale) {
         setThirmBal(tokenBal);
@@ -219,7 +219,7 @@ function Deposit() {
         <KeyboardArrowLeft /> Go Back
           </GoBackButton>}
       <div className="balance-info">
-        <p>{thirmBal} THIRM</p>
+        <p>{parseFloat(thirmBal).toFixed(8)} THIRM</p>
       </div>
     </div>
 

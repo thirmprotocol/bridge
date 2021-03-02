@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Avatar, CircularProgress, FormControl, Grid, InputAdornment, InputLabel, ListItemSecondaryAction, ListItemText, MenuItem, OutlinedInput, Select, Snackbar, Typography } from '@material-ui/core';
+import { Avatar, CircularProgress, FormControl, Grid, InputAdornment, InputLabel, Link, ListItemSecondaryAction, ListItemText, MenuItem, OutlinedInput, Select, Snackbar, Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import { KeyboardArrowLeft, TrendingFlat } from '@material-ui/icons';
 import Alert from '@material-ui/lab/Alert';
@@ -11,6 +11,7 @@ import {
   useRecoilState
 } from 'recoil';
 import checkIcon from '../../assets/images/check.png';
+import errorIcon from '../../assets/images/error.png';
 import { useControllerContract } from './../../hooks/index';
 import config from './../../utils/config/index';
 import { formatAddress, getThirmTokenContract } from './../../utils/index';
@@ -47,6 +48,10 @@ function Withdraw() {
 
   const [tokenBal, setTokenBal] = useRecoilState(tokenBalState);
 
+  const [withdrawSuccess, setWithdrawSuccess] = useState(false);
+
+  const [transactionHash, setTransactionHash] = useState("");
+
   useEffect(() => {
     let stale = false;
     const getTokensList = async () => {
@@ -58,7 +63,7 @@ function Withdraw() {
 
       const tokenContract = getThirmTokenContract(library, account, tokensListTemp[asset].address);
       const bal = await tokenContract.balanceOf(account);
-      const tokenBal = parseFloat(formatEther(bal)).toFixed(8);
+      const tokenBal = formatEther(bal);
 
       if (!stale) {
         setTokenBal(tokenBal);
@@ -103,28 +108,30 @@ function Withdraw() {
     if (processingIndicator) return;
     const addressToMap = address.trim();
     try {
-      const tknAmount = parseEther(amount);
+      const tknAmount = parseEther(amount.trim());
       const withdrawed = await controllerContract.registerWithdrawal(tokensList[asset].coin, addressToMap, tknAmount, {
         gasLimit: 500000
       });
 
       setProcessingIndicator(true);
       library.once(withdrawed.hash, (done) => {
-
+        setTransactionHash(withdrawed.hash);
         if (done.status === 1) {
-          setCurrentStep(4);
+          setWithdrawSuccess(true);
           setSnackBar({
             status: true,
             type: "success",
             message: `${tokensList[asset].name} withdraw completed.`
           });
         } else {
+          setWithdrawSuccess(false);
           setSnackBar({
             status: true,
             type: "error",
             message: `${tokensList[asset].coin} withdraw failed.`
           });
         }
+        setCurrentStep(4);
         setProcessingIndicator(false);
       });
 
@@ -132,8 +139,6 @@ function Withdraw() {
       console.log(e);
     }
   };
-
-
 
   const approveCurrentToken = async () => {
     if (processingIndicator) return;
@@ -179,7 +184,13 @@ function Withdraw() {
 
   const onBack = async () => {
     if (currentStep > 1) {
-      setCurrentStep(1);
+      if(currentStep === 4) {
+        setCurrentStep(0);
+      } else {
+        setCurrentStep(1);
+      }
+      setTransactionHash("");
+      setWithdrawSuccess(false);
       return;
     }
     setCurrentStep(prevStep =>
@@ -215,7 +226,7 @@ function Withdraw() {
           </GoBackButton>
         }
         <div className="balance-info">
-          <p>{tokenBal} {tokensList[asset].name}</p>
+          <p>{parseFloat(tokenBal).toFixed(8)} {tokensList[asset].name}</p>
         </div>
       </div>
       {
@@ -385,8 +396,20 @@ function Withdraw() {
 
       {
         currentStep === 4 && <div className="action-area">
-          <img src={checkIcon} alt="done" />
-          <p className="completed-text">Withdraw Completed</p>
+          {
+            withdrawSuccess && <>
+              <img src={checkIcon} alt="done" />
+              <p className="completed-text">Withdraw Completed</p>
+            </>
+          }
+
+          {
+            !withdrawSuccess && <>
+              <img src={errorIcon} alt="done" />
+              <p className="error-text">Withdraw Failed</p>
+            </>
+          }
+          <Button color="primary" target="_blank" href={`https://bscscan.com/tx/${transactionHash}`}>Check Transaction</Button>
           <GoBackButton color="primary" onClick={onBack}>
             Go Back
           </GoBackButton>

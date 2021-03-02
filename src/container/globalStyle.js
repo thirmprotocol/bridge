@@ -124,12 +124,12 @@ export const MainContentWrapper = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 300px;
+    height: 320px;
     
     img {
       width: 120px;
       height: 120px;
-      padding: 16px;
+      padding: 24px;
     }
     p {
       font-size: 18px;
@@ -164,6 +164,13 @@ export const MainContentWrapper = styled.div`
     }
     .completed-text {
       color: #6ab04c;
+      font-size: 20px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+    }
+
+    .error-text {
+      color: #eb4d4b;
       font-size: 20px;
       font-weight: 500;
       letter-spacing: 0.02em;
