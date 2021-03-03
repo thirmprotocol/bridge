@@ -1359,10 +1359,25 @@
   dependencies:
     "@ethersproject/bignumber" "^5.0.13"
 
-"@ethersproject/contracts@5.0.9", "@ethersproject/contracts@^5.0.9":
+"@ethersproject/contracts@5.0.9":
   version "5.0.9"
   resolved "https://registry.yarnpkg.com/@ethersproject/contracts/-/contracts-5.0.9.tgz"
   integrity sha512-CCTxVeDh6sjdSEbjzONhtwPjECvaHE62oGkY8M7kP0CHmgLD2SEGel0HZib8e5oQKRKGly9AKcUFW4g3rQ0AQw==
+  dependencies:
+    "@ethersproject/abi" "^5.0.10"
+    "@ethersproject/abstract-provider" "^5.0.8"
+    "@ethersproject/abstract-signer" "^5.0.10"
+    "@ethersproject/address" "^5.0.9"
+    "@ethersproject/bignumber" "^5.0.13"
+    "@ethersproject/bytes" "^5.0.9"
+    "@ethersproject/constants" "^5.0.8"
+    "@ethersproject/logger" "^5.0.8"
+    "@ethersproject/properties" "^5.0.7"
+
+"@ethersproject/contracts@^5.0.11":
+  version "5.0.11"
+  resolved "https://registry.yarnpkg.com/@ethersproject/contracts/-/contracts-5.0.11.tgz#e6cc57698a05be2329cb2ca3d7e87686f95e438a"
+  integrity sha512-FTUUd/6x00dYL2VufE2VowZ7h3mAyBfCQMGwI3tKDIWka+C0CunllFiKrlYCdiHFuVeMotR65dIcnzbLn72MCw==
   dependencies:
     "@ethersproject/abi" "^5.0.10"
     "@ethersproject/abstract-provider" "^5.0.8"
