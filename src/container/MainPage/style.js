@@ -31,3 +31,16 @@ export const MainAlert = styled(Alert)`
   margin: 24px 0;
   text-align: center;
 `
+
+export const ExternalLinks = styled.div`
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+padding: 16px 0;
+.MuiButton-label {
+  font-size: 12px;
+}
+  img {
+    width: 24px;
+  }
+`;

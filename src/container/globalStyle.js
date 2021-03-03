@@ -101,21 +101,19 @@ export const MainContentWrapper = styled.div`
 
   .balance-info {
     text-align: center;
-    margin-bottom: 16px;
     color: #666;
     p {
       color: ${bridgeTheme.secondaryColor};
       font-weight: 500;
       font-size: 15px;
+      margin: 6px 0;
     }
   }
   .top-bar {
-    margin-top: -8px;
-    margin-bottom: -24px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
   }
 
   .action-area {
