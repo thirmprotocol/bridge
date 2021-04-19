@@ -6,7 +6,7 @@ import {
   Tab,
   Tabs,
 } from "@material-ui/core";
-import React from "react";
+import React, { useEffect } from "react";
 import Deposit from "./../Deposit/index";
 import Withdraw from "./../Withdraw/index";
 import {
@@ -20,6 +20,9 @@ import {
 import pancakeImage from "../../assets/images/pancake.png";
 import bscscanImage from "../../assets/images/bscscan.png";
 import config from "../../utils/config";
+import { useRecoilState } from "recoil";
+import { tokensListState } from "../../utils/recoilState";
+import { getTokens } from "../../utils";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -39,6 +42,24 @@ function TabPanel(props) {
 
 function MainPage() {
   const [value, setValue] = React.useState(0);
+
+  const [, setTokensList] = useRecoilState(tokensListState);
+
+  useEffect(() => {
+    let stale = false;
+    const getTokensList = async () => {
+      let tokensListTemp = await getTokens();
+      if (!stale) {
+        setTokensList(tokensListTemp);
+      }
+    };
+
+    getTokensList();
+
+    return () => {
+      stale = true;
+    };
+  });
 
   const handleChange = (event, newValue) => {
     setValue(newValue);

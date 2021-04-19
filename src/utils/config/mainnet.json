@@ -1,17 +1,8 @@
 {
-		"MAPPING_CONTRACT_ADDRESS": "0x3db754Cce4A8e4654bF3D70C03C3b4Cbd23E2DbD",
-		"CONTROLLER_CONTRACT_ADDRESS": "0x3DF5df485B999DBAa1bED271c2cEa531cA559435",
-		"THIRM_TOKEN_ADDRESS": "0x21da60b286baefd4725a41bb50a9237eb836a9ed",
-		"RPC_URL": "https://mainnet.infura.io/v3/370da5783b9b4bc086067dcfb45ba7a3",
-		"network": "Binance Smart Chain",
-		"chainID": 56,
-		"tokens": [
-			{
-				"address": "0x8edf45a12c27a226d2849f81641dc9792dab417c",
-				"coin": "NANO",
-				"name": "tNANO",
-				"image": "https://ipfs.io/ipfs/QmexKGqDqovzHZRZQkHvEv9GoWfi9yfDLah8HNWRrdAbHK/tNANO.png",
-				"depositAddress": "nano_154c1u5w5t8jewwac1q44oja9ugr89hirsqcdudkytuan4418bf8pfrgjudz"
-			}
-		]
-	}
+	"MAPPING_CONTRACT_ADDRESS": "0xE47924aDc1F8530Ae34E67431D3a13AbCF5f95cF",
+	"CONTROLLER_CONTRACT_ADDRESS": "0x1B5da31bB3ED46EfaFa9d23205e41a7e7400D11d",
+	"THIRM_TOKEN_ADDRESS": "0x21da60b286baefd4725a41bb50a9237eb836a9ed",
+	"RPC_URL": "https://mainnet.infura.io/v3/370da5783b9b4bc086067dcfb45ba7a3",
+	"network": "Binance Smart Chain",
+	"chainID": 56
+}

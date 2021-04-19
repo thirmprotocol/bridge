@@ -1,28 +1,31 @@
-import {
-  atom
-} from 'recoil';
+import { atom } from "recoil";
 
 export const amountState = atom({
-  key: 'amount',
+  key: "amount",
   default: "",
 });
 
 export const addressState = atom({
-  key: 'address',
+  key: "address",
   default: "",
 });
 
 export const assetState = atom({
-  key: 'asset',
-  default: 0,
+  key: "asset",
+  default: "btc",
 });
 
 export const thirmBalState = atom({
-  key: 'thirm',
+  key: "thirm",
   default: "0.00000000",
 });
 
 export const tokenBalState = atom({
-  key: 'token',
+  key: "token",
   default: "0.00000000",
+});
+
+export const tokensListState = atom({
+  key: "tokensList",
+  default: {},
 });
