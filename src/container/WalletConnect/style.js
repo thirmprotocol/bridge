@@ -1,5 +1,4 @@
-import styled from 'styled-components';
-
+import styled from "styled-components";
 
 export const ConnectWrapper = styled.div`
   margin: auto 16px;
@@ -17,7 +16,7 @@ export const ConnectWrapper = styled.div`
   }
   .error-message {
     margin: 36px 0;
-    text-align: center;    
+    text-align: center;
   }
 
   @media (max-width: 680px) {
@@ -25,5 +24,10 @@ export const ConnectWrapper = styled.div`
     .heading-info {
       font-size: 40px;
     }
+  }
+
+  .wallet-icon {
+    height: 40px;
+    width: 40px;
   }
 `;
