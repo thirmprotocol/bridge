@@ -27,7 +27,7 @@ export const ConnectWrapper = styled.div`
   }
 
   .wallet-icon {
-    height: 40px;
-    width: 40px;
+    height: 32px;
+    width: 32px;
   }
 `;
