@@ -70,8 +70,8 @@ function HeaderBar() {
                 alt="wallet"
                 variant="circular"
                 style={{
-                  width: 24,
-                  height: 24,
+                  width: 16,
+                  height: 16,
                 }}
               />
               <span className="account-address">

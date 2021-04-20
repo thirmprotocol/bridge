@@ -1,7 +1,7 @@
 import { Button, Grid } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import { useWeb3React } from "@web3-react/core";
-import OnlineIcon from "../../assets/images/online.png";
+import EnterIcon from "../../assets/images/enter.png";
 import { getErrorMessage } from "./../../hooks/index";
 import { ConnectWrapper } from "./style";
 
@@ -42,7 +42,7 @@ const ConnectWallet = (props) => {
                     <img
                       className="wallet-icon"
                       alt="Meta Mask"
-                      src={OnlineIcon}
+                      src={EnterIcon}
                     />
                     <p className="button-label">Connect With Your Wallet</p>
                   </Button>
